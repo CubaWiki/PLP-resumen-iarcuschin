@@ -5,6 +5,7 @@
 \usepackage[a4paper, margin=2.5cm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{amsthm}
+\usepackage{mathtools}
 
 \usepackage{chngcntr}
 \counterwithin*{equation}{section}
@@ -54,10 +55,21 @@
 \newcommand{\exponen}[0]{\ensuremath{\mathcal{E}}}  % Distribución exponencial
 
 
-\newcommand{\xit}{\textit}
-\newcommand{\xbf}{\textbf}
-\newcommand{\xtt}{\texttt}
+%generales
+\newcommand{\xit}[0]{\textit}
+\newcommand{\xbf}[0]{\textbf}
+\newcommand{\xtt}[0]{\texttt}
 
+%lambda calculo
+\newcommand{\abs}[3]{\ensuremath{\lambda#1:#2.#3}}
+\newcommand{\ifte}[3]{\ensuremath{if\ #1\ then\ #2\ else\ #3}}
+\newcommand{\app}[2]{\ensuremath{#1\ #2}}
+\newcommand{\sust}[2]{\ensuremath{#1\ \{#2\}}}
+\newcommand{\deriv}[3]{\ensuremath{\frac{#1}{#2}\ \text{(#3)}}}
+\renewcommand{\vert}{\ |\ }
+\newcommand{\eqdef}[0]{\ \stackrel{\mathclap{\normalfont\mbox{def}}}{=}\ }
+\newcommand{\from}[0]{\leftarrow}
+\newcommand{\toto}[0]{\twoheadrightarrow}
 
 \setlength{\tabcolsep}{25pt}
 \renewcommand{\arraystretch}{2}

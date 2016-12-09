@@ -35,6 +35,154 @@ map y filter, etc.
 
 \subsection{Lambda cálculo}
 
+Fue introducido por \xit{Alonzo Church} en 1934, y presenta un modelo de comptuación basado en \xbf{funciones}.
+
+La formulación original es sin tipos, pero posteriormente (1941) se introduce el \xbf{Lambda cálculo tipado}, que es el que vamos a estudiar.
+
+Empezamos con el Lambda cálculo tipado con expresiones booleanas y luego lo vamos extendiendo con otras construcciones.
+
+\subsubsection{Expresiones de tipos}
+
+Denotan los diferentes \xbf{tipos}. Por ejemplo, en el Lambda cálculo tipado con expresiones booleanas (de ahora en más $\lambda^b$) tenemos:
+
+\[ \sigma, \tau ::= Bool|\sigma\to\tau \]
+
+dónde,
+\begin{itemize}
+  \item $Bool$ es el tipo de los booleanos,
+  \item $\sigma\to\tau$ es el tipo de las funciones de tipo $\sigma$ en $\tau$
+\end{itemize}
+
+\subsubsection{Términos}
+
+Denotan las posibles expresiones que podemos construir. Por ejemplo, en $\lambda^b$ tenemos:
+
+\[ M ::= true \vert false \vert \ifte{M}{P}{Q} \vert \app{M}{N} \vert \abs{x}{\sigma}{M} \vert x \]
+
+dónde,
+\begin{itemize}
+  \item $true$ y $false$ son las constantes de verdad,
+  \item \ifte{M}{P}{Q} es el condicional,
+  \item \app{M}{N} es la aplicación de la función denotada por el término $M$ al argumento $N$,
+  \item \abs{x}{\sigma}{M} es una función cuyo parámetro formal es $x$ y cuyo cuerpo es $M$.
+  \item $x$ es una variable de términos.
+\end{itemize}
+
+Ejemplo: $\app{(\abs{f}{Bool \to Bool}{f\ true})}{(\abs{y}{Bool}{y})}$
+
+\subsubsection{Sustitución}
+
+Dentro de un término, una variable puede estar \xbf{libre} o \xbf{ligada}. Decimos que $x$ ocurre libre si no se encuentra bajo el alcance de una ocurrencia de $\lambda x$. En caso contrario, está ligada. Formalmente, tenemos que:
+
+\begin{align*}
+FV(x) &\eqdef \{x\} \\
+FV(true) = FV (false) &\eqdef \emptyset \\
+FV(\ifte{M}{P}{Q}) &\eqdef FV(M) \cup FV(P) \cup FV(Q) \\
+FV(\app{M}{N}) &\eqdef FV(M) \cup FV(N) \\
+FV(\abs{x}{\sigma}{M}) &\eqdef FV(M)\ \backslash\ \{x\} \\
+\end{align*}
+
+Luego, el proceso de sustitución $M\{x \from N\}$ consiste en sustituir todas las ocurrencias \xit{libres} de $x$ en el término $M$ por el término $N$. Esto se utilizar para darle semántica a la aplicación de funciones.
+
+Cuando realizamos este proceso, asumimos que la variable ligada se renombró de tal manera que no ocurre libre en $N$. Por ejemplo:
+
+\[ \sust{\abs{z}{\sigma}{x}}{x\from Z} = \abs{z}{\sigma}{z}\]
+
+Está mal, ya que convertimos la función constante \abs{z}{\sigma}{x} en la función identidad. Entonces, deberíamos haber utilizado:
+
+\[ \sust{\abs{w}{\sigma}{x}}{x\from Z} = \abs{w}{\sigma}{z}\]
+
+Una vez que entendemos esto, podemos definir el concepto de $\alpha-equivalencia$. Decimos que dos términos $M$ y $N$ son $\alpha-equivalentes$ si difieren solamente en el nombre de sus variables ligadas. Ejemplo: $\abs{z}{Bool}{z} =_{\alpha} \abs{y}{Bool}{y}$, pero $\abs{x}{Bool}{y} \neq_{\alpha} \abs{x}{Bool}{z}$.
+
+En los casos de sustitución que haya conflictos, podemos renombrar apropiadamente para que ande todo.
+
+\subsubsection{Sistema de tipado}
+
+Es un sistema formal de deducción (o derivación) que utiliza axiomas y reglas de tipado para caracterizar un subconjunto de los términos llamados \xit{tipados}. Es decir, es un sistema mediante el cual podemos deducir el tipo de un término.
+
+Un \xit{contexto de tipado} $\Gamma$ es un conjunto de pares $\{x_1:\sigma_1,\dots,x_n:\sigma_n\}$ donde cada $x_i$ es distinto. Los $x_i$ representan las variables y los $\sigma_i$ sus tipo asignado.
+
+Un \xit{juicio de tipado} es una expresión de la forma $\Gamma \rhd M : \sigma$ que significa que el término $M$ tiene tipo $\sigma$ asumiendo el contexto de tipado $\Gamma$. Estos juicios se generan utilizando \xit{axiomas y reglas de tipado}. Ejemplo de axioma:
+
+\[\deriv{}{\Gamma \rhd true : Bool}{T-True}\]
+
+Ejemplo de regla:
+
+\[\deriv{\Gamma, x : \sigma \rhd M : \tau}{\Gamma \rhd \abs{x}{\sigma}{M}:\sigma\to\tau}{T-Abs}\]
+
+\vspace{0.5em}
+Entonces, $M$ es \xit{tipable}  si $\Gamma \rhd M : \sigma$ puede derivarse usando los axiomas y reglas de tipados, para algún $\Gamma$ y $\sigma$.
+
+Propiedades básicas:
+
+\begin{itemize}
+  \item \xbf{Unicidad de tipos}: si $\Gamma \rhd M : \sigma$ y $\Gamma \rhd M : \tau$ son derivables, entonces $\sigma = \tau$.
+  \item \xbf{Weakening+Strenghening}: si $\Gamma \rhd M : \sigma$ es derivable y $\Gamma \cap \Gamma'$ contiene a todas las variables libres de $M$, entonces $\Gamma' \rhd M : \sigma$.
+  \item \xbf{Sustitución}: si $\Gamma,x:\sigma \rhd M : \tau$ y $\Gamma \rhd N : \sigma$ son derivables, entonces $\Gamma \rhd \sust{M}{x\from N} : \tau$ es derivable.
+\end{itemize}
+
+\subsubsection{Semántica operacional}
+
+Habiendo definido la sintaxis de $\lambda^b$, nos interesa formular cómo se evalúan o ejecutan los términos. Esto se puede hacer de varias formas: operacional, denotacional y axiomática. Nosotros vamos a user \xit{operacional}.
+
+La semántica operacional consiste en interpretar a los \xit{términos como estados} de una máquina abstracta y definir una \xit{función de transición} que indica, dado un estado, cúal es el estado siguiente. De esta forma, el \xit{significado} de un término $M$ es el estado final que alcanza la máquina empezando desde $M$. Hay principalmente dos formas de definir la función de transición:
+
+\begin{itemize}
+  \item \xbf{Small-step}: la función de transición describe un paso de computación.
+  \item \xbf{Big-step}: la función de transición, en un paso, evalúa el término a su resultado.
+\end{itemize}
+
+Al igual que con el Sistema de tipado, vamos a usar axiomas y reglas para formular \xbf{juicios de evaluación} $M\to N$ que indican que el término $M$ reduce, en un paso, al término $N$. Ejemplo de axioma:
+
+\[\deriv{}{\ifte{true}{M_2}{M_3} \to M_2}{E-IfTrue}\]
+
+Ejemplo de regla:
+
+\[\deriv{M_1 \to M_1'}{\ifte{M_1}{M_2}{M_3} \to \ifte{M_1'}{M_2}{M_3}}{E-If}\]
+
+Cuando dado un término $M$, no existe $N$ tal que $M\to N$, decimos que $M$ no puede reducirse más y está en \xbf{forma normal}.
+
+Lo último que nos falta agregar es un conjunto de \xbf{Valores} que denota las expresiones que pueden ser un resultado válido de un cómputo. Para $\lambda^b$, tenemos que $V ::= true \vert false$.
+
+Propiedades básicas:
+
+\begin{itemize}
+  \item \xbf{Determinismo del juicio de evaluación en un paso}: si $M \to M'$ y $M \to M''$, entonces $M'= M''$.
+  \item Todo valor está en forma normal, pero no vale el recíproco.
+  \item Si un termino está en forma normal pero no es un valor, entonces decimos que es un \xbf{estado de error}.
+\end{itemize}
+
+El \xbf{Juicio de evaluación en muchos pasos} $\toto$ es la clausura reflexiva, transitiva de $\to$. Es decir, la menor relación tal que:
+
+\begin{itemize}
+  \item Si $M\to M'$, entonces $M\toto M'$.
+  \item $M\toto M$, para todo $M$.
+  \item Si $M \toto M'$ y $M' \toto M''$, entonces $M \toto M''$.
+\end{itemize}
+
+Propiedades de evaluación en muchos pasos:
+
+\begin{itemize}
+  \item \xbf{Unicidad de formas normales}: si $M \toto _U$ y $M \toto V$, entonces $U=V$.
+  \item \xbf{Terminación}: para todo $M$ existe una forma normal $N$ tal que $M \toto N$.
+  \item Si un término está bien tipado, y termina, entonces evalúa a un valor.
+\end{itemize}
+
+Propiedades de \xit{Corrección}:
+
+\begin{itemize}
+  \item Corrección = Progreso + Preservación.
+  \item \xbf{Progreso}: si $M$ es cerrado y bien tipado entonces
+    \begin{itemize}
+      \item $M$ es un valor
+      \item o bien existe $M'$ tal que $M \to M'$.
+    \end{itemize}
+    Esto quiere decir que la evaluación no puede trabarse para términos cerrados y bien tipados que no son valores.
+  \item \xbf{Preservación}: si $\Gamma \rhd M : \sigma$ y $M \to N$, entonces $\Gamma \rhd N : \sigma$. Es decir que la evaluación preserva tipos.
+\end{itemize}
+
+% tipos, terminos, tipado, evlauacion
+% inferencia de tipos
 \subsubsection{Sintaxis y ejemplos de programación}
 \subsubsection{Sistemas de tipos e inferencia}
 \subsubsection{Semántica operacional}
