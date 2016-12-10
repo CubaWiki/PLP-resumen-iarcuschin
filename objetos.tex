@@ -115,4 +115,38 @@ Se necesita más delegación cuando:
 Los bloques son simplemente un pedazo de código. Closure agrega \xit{Binding Lexicográfico} de variables a los bloques. Full Closure agrega además un control apropiado de flujo.
 
 \subsection{Sistemas de tipos}
-\subsection{Herencia como subtipado}
+
+Algunos errores de tipos habituales en un languaje orientado a objetos suelen ser:
+\begin{itemize}
+  \item Métodos que no reciben la cantidad y tipo de parámetros correctos.
+  \item Asignaciones que no respetan el tipo declarado de las variables y campos.
+  \item Invocación a métodos inexistentes.
+\end{itemize}
+
+Tener en cuenta que las nociones de clase y tipo se mantien separadas:
+\begin{itemize}
+  \item Clase: inherentemente de implementación (ej. variables de instancia privadas, código fuente de los métodos, etc.)
+  \item Tipo de un objeto, la interfaz pública del mismo: nombres de todos los métodos, junto con el tipo de los argumentos y del resultado.
+\end{itemize}
+
+El tipo responde a la especificación de un objeto, mientras que la clase a su implementación. Es decir, varias clases pueden instanciar objetos con el mismo tipo.
+
+\subsection{Subtipado}
+
+Introducimos ahora la noción de \xbf{Juicio de subtitpado} $\subt{\sigma}{\tau}$, que se entiende como ``En todo contecxto donde se espera una expresión de tipo $\tau$, puede utilizarse una de tipo $\sigma$ en su lugar sin que ello genere un error''. Ejemplo, si \xtt{D} es subclase de \xtt{C}, se espera que \subt{DType}{CType}.
+
+Ahora bien, si $\Gamma \rhd M : \sigma$ y \subt{\sigma}{\tau}, siguiendo el principio de subtipado, podemos armar una nueva regla de tipado llamada \xbf{Subsumption}:
+
+\[\deriv{\Gamma \rhd M : \sigma\ \subt{\sigma}{\tau}}{\Gamma \rhd M : \tau}{T-Subs}\]
+
+Ahora, podemos empezar a armar axiomas y reglas de subtipado. Para los tipos base asumimos que subtipan de la siguiente forma: \subt{Bool}{Nat}, \subt{Nat}{Int}, \subt{Int}{Float}. Las reglas más básicas son:
+
+\[\deriv{}{\subt{\sigma}{\sigma}}{S-Refl} \quad \deriv{\subt{\sigma}{\tau}\ \subt{\tau}{\rho}}{\subt{\sigma}{\rho}}{S-Trans}\]
+
+\paragraph{El tipo Top}
+
+\paragraph{Subtipado de registros}
+
+\paragraph{Subtipado de funciones}
+
+\paragraph{Subtipado de referencias}
