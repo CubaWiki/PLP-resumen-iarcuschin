@@ -8,7 +8,111 @@
   \item Tine un \xbf{alto nivel de abstracción}: los conceptos centrales son los de objetos, clases y mensajes.
   \item Tiene una \xbf{arquitectura extensible}: jerarquía de clases, polimorfismo de subtipos y binding dinámico.
   \item La matemática y razonamiento algebraico tiende a ser más compleja.
+  \item La arquitectura de los programas se basan en \xbf{módulos} deducidos de objetos del dominio.
 \end{itemize}
+
+\subsection{Fundamentos}
+
+\begin{itemize}
+  \item Programa: Modelo computable
+  \item Modelo: Simulación
+  \item Cómo: Envío de mensajes
+  \item Objeto: Representación de un ente del dominio del problema
+  \item Mensaje: Conjunto de colaboraciones entre objetos
+\end{itemize}
+
+El resultado es que los \xbf{objetos colaboran} entre sí enviandose \xbf{mensajes}.
+
+Notar que el concepto de objeto no aparece al principio de la lista. El concepto principal es el de Modelo. Que todo sea un objeto es una consecuencia, no un objetivo.
+
+\subsection{Mensajes}
+ Los mensajes definen al objeto, ya que nos dicen qué saben hacer los objetos.
+ Mediante estos mensajes que saben responder, los objetos definen su comportamiento, su esencia.
+
+ Definimos la \xbf{esencia} de un objeto como el conjunto minimal de mensajes tales que, al sacar uno de ellos el objeto deja de representar al ente del dominio del problema.
+
+ En cuanto a la comunicación entre objetos:
+\begin{itemize}
+  \item Dirigida: el receptor está presente y es alcanzable (visible) al momento del envío.
+  \item Sincrónica: el envío de un mensaje es bloqueante.
+  \item Siempre hay respuesta.
+  \item Anónima: el receptor no conoce al emisor, la respuesta no varía en función del emisor.
+\end{itemize}
+
+Los mensajes tienen asociada una lista de colaboradores (parámetros/argumentos en el paradigma imperativo) que se envían con él.
+
+\subsection{Variantes del paradigma}
+\subsubsection{Prototipado}
+
+En los lenguajes de prototipado orientados a objetos, todos los entes son de similar jerarquía, no hay abstracciones. Los objetos pueden tener padres (o prototipos) en otros objetos.
+
+Permite trabajar con los objetos sin necesidad de tener clases. Con lo que podemos definir comportamiento por objeto (y crear objetos únicos).
+
+Crear objetos equivale a clonar objetos. Permite modelar sin generalizar ni abstraer.
+
+\subsubsection{Clasificación}
+
+En los lenguajes de clasificación orientados a objetos, por cada entidad del problema a modelar existen una o más instancias de esa entidad, y la clase que las define. Esto exige pensar un nombre para dicha clase que represente correctamente lo que se está modelando.
+
+Su esencias es saber crear instancias y definir el comportamiento de ellas.
+
+En estos casos el tipado estático es una complicación, y el tipado dinámico un feature. Si el lenguaje es estaticamente tipado, es un problema pensar el protocolo a implementar por la clase de antemano. Además, el \xit{Method LookUp} se complica, mientras que con tipado dinámico se vuelve más flexible y permite varias optimizaciones.
+
+Notar que como todo es un objeto, por lo tanto las clases también lo son. Pero los objetos solo existen cuando su clase existe. Para eso existe la clase \xtt{ProtoObject}, que no tiene clase padre, y la clase \xtt{MetaClass}, que es instancia de si misma.
+
+\paragraph{Relación de subclasificación}
+
+Permite decir que hay conceptos más abstractos que otros. Una subclase es algo más concreto que una super clase.
+
+Este mecanismo se suele llamar \xit{herencia}, y está pensado para construir teoría, no para ahorrar código.
+
+\subsection{Smalltalk}
+
+\paragraph{Self}
+
+Es la forma en la que un objeto se refiere a si mismo. Es una pseudo-variable:
+\begin{itemize}
+  \item Una palabra reservada.
+  \item Simpre está y no se puede asignar.
+  \item Representa al objeto que recibió el mensaje y está ejecutando el método.
+\end{itemize}
+
+\paragraph{Super}
+
+COMPLETAR
+
+\paragraph{Tipos de mensajes}
+
+Tenemos
+\begin{itemize}
+  \item \xbf{Unarios}
+  \item \xbf{Binarios}
+  \item \xbf{Keyword}
+\end{itemize}
+
+Se evalúan de izquierda a derecha por pasadas: primero unarios, luego binarios y finalmente keywords.
+
+\paragraph{Polimorfismo}
+
+Dos objetos son polimórficos con respecto a un conjunto de mensajes si ambos responden a estos mensajes con la misma semántica.
+
+Ejemplo: \xtt{1 + 2} son polimórficos con \xtt{1.0 + 2.0}, pero no con \xtt{'1' + '2'}.
+
+\paragraph{Máximas}
+
+Se necesita más delegación cuando:
+\begin{itemize}
+  \item Tenemos código repetido.
+    \begin{itemize}
+      \item Si es en objetos distintos, falta un objeto. \xbf{Forwarding}.
+      \item Si es en el mismo objeto, falta un método. \xbf{Delegación}.
+    \end{itemize}
+  \item Hay código condicional. Faltan objetos. \xbf{Polimorfismo}.
+\end{itemize}
+
+\paragraph{Bloque, Closure y Full Closure}
+
+Los bloques son simplemente un pedazo de código. Closure agrega \xit{Binding Lexicográfico} de variables a los bloques. Full Closure agrega además un control apropiado de flujo.
 
 \subsection{Sistemas de tipos}
 \subsection{Herencia como subtipado}
