@@ -3,8 +3,8 @@
 \subsection{Características generales}
 
 \begin{itemize}
-  \item Los programas son predicados.
-  \item La computación se expresa a través de ``proof search''.
+  \item Se basa en el uso de la lógica como un lengauje de programación: los programas son predicados.
+  \item La computación se expresa a través de ``proof search''. Para esto, se especifican ciertos \xbf{hechos} y \xbf{reglas}, así como un objetivo o \xbf{goal} a probar. Luego, un motor de inferencia trata de probar que el objetivo es consecuencia de los hechos y reglas.
   \item No hay un estado global.
   \item Los resultados intermedios son pasados a través de unificación.
   \item Repetición basada en recursión.
@@ -14,9 +14,248 @@
   \item Ejecución lenta en comparación con otros paradigmas.
 \end{itemize}
 
+\subsubsection{Repaso lógica proposicional}
 
-\subsection{Método de resolución}
+\paragraph{Sintaxis}
 
-\subsubsection{Lógica proposicional}
-\subsubsection{Lógica de primer órden}
-\subsubsection{SLD}
+Dado un conjunto $\mathcal{V}$ de variables proposicionales, definimos inductivamente el conjunto de formulas proposicionales de la siguiente manera:
+
+\begin{itemize}
+  \item Una variable proposicional $P_0, P_1, \dots$ es una proposición.
+  \item Si $A, B$ son proposiciones, entonces:
+    \begin{itemize}
+      \item $\lnot A$ es una proposición.
+      \item $A \land B$ es una proposición.
+      \item $A \lor B$ es una proposición.
+      \item $A \supset B$ es una proposición.
+      \item $A \iff B$ es una proposición.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Semántica}
+
+Una \xbf{valuación} es una función $v:\mathcal{V}\to\{T,F\}$ que asigna valores de verdad a las variables proposicionales.
+
+Una valuación \xbf{satisface} una proposición $A$ si $v \models A$ donde
+
+\begin{align*}
+  v \models P &\text{ sii } v(P) = T \\
+  v \models \lnot A &\text{ sii } v \not\models A \text{ (que es lo mismo que $\lnot v \models A$)} \\
+  v \models A \land B &\text{ sii } v \models A \text{ y } v \models B \\
+  v \models A \lor B &\text{ sii } v \models A \text{ o } v \models B \\
+  v \models A \supset B &\text{ sii } v \not\models A \text{ o } v \models B \\
+  v \models A \iff B &\text{ sii } (v \models A \text{ sii } v \models B) \\
+\end{align*}
+
+\paragraph{Tautologías y satisfactibilidad}
+
+Una proposición $A$ es:
+\begin{itemize}
+  \item Una tautología si $v \models A$ para toda valuación $v$.
+  \item Satisfacible si existe una valuación $v$ tal que $v \models A$.
+  \item Insatisfacible si no es satisfacible.
+\end{itemize}
+
+Un conjunto de proposiciones $S$ es
+\begin{itemize}
+  \item Satisfacible si existe una valuación $v$ tal que para todo $A \in S$, se tiene $v \models A$.
+  \item Insatisfacible si no es satisfacible.
+\end{itemize}
+
+\begin{teo}
+  Una proposición $A$ es una tautología sii $\lnot A$ es insatisfacible.
+\end{teo}
+\begin{proof}
+  \hspace{0.5em}\\
+  $\implies$. Si $A$ es tautología, para toda valuación $v$, $v \models A$. Entonces $v \not\models \lnot A$.\\
+  $\Longleftarrow$. Si $\lnot A$ es insatisfacible, para toda valuación $v$, $v \not\models \lnot A$. Entonces $v \models A$.
+\end{proof}
+
+\paragraph{Forma Normal Conjuntiva (FNC)}
+
+Un literal es una variable proposicional $P$ o su negación $\lnot P$.
+
+Una proposición $A$ está en FNC si es una conjunción
+
+\[C_1 \land \dots \land C_n\]
+
+donde cada $C_i$ (llamado clausula) es una disyunción
+
+\[B_{i1} \lor \dots \lor B_{in}\]
+
+y cada $B_{ij}$ es un literal.
+
+Entonces, una FNC es una \xit{conjunción de disyunciones de literales}.
+
+\begin{teo}
+  Para toda proposición $A$ puede hallarse una proposición $A'$ en FNC que es lógicamente equivalente a $A$.
+\end{teo}
+
+\paragraph{Notación conjuntista para FNC}
+
+Dado que tanto $\lor$ como $\land$
+\begin{itemize}
+  \item Son conmutativos.
+  \item Son asociativos.
+  \item Son idempotentes.
+\end{itemize}
+
+Podemos asumir que
+\begin{itemize}
+  \item Cada cláusula $C_i$ es distinta.
+  \item Cada cláusula puede verse como un conjunto de literales distintos.
+\end{itemize}
+
+Consecuentemente, para una FNC podemos usar la notación
+
+\[\{C_1, \dots, C_n\}\]
+
+donde cada $C_i$ es un conjunto de literales
+
+\[\{B_{i1}, \dots, B_{in}\}\]
+
+\subsection{Método de resolución para lógica proposicional}
+
+El método de \xbf{Resolución} fue introducido en 1965 y se basa en el principio de demostración por refutación: probar que $A$ es válido mostrando que $\lnot A$ es insatisfacible.
+
+Además, se basa en el hecho que el conjunto de el conjunto de cláusulas
+
+\[\{C_1, \dots, C_m, \{A,P\}, \{B, \lnot P\}\}\]
+
+es lógicamente equivalente a
+
+\[\{C_1, \dots, C_m, \{A,P\}, \{B, \lnot P\}, \{A,B\}\}\]
+
+En consecuencia, el conjunto de cláusulas
+
+\[\{C_1, \dots, C_m, \{A,P\}, \{B, \lnot P\}\}\]
+
+es insatisfacible sii
+
+\[\{C_1, \dots, C_m, \{A,P\}, \{B, \lnot P\}, \{A,B\}\}\]
+
+es insatisfacible.
+
+Las claúsula $\{A,B\}$ se llama resolvente de las cláusulas $\{A, P\}$ y $\{B, \lnot P.\}$. El resolvente de las cláusulas $\{P\}$ y $\{\lnot P\}$ es la cláusula vacia y se anota $\square$.
+
+Entonces, la regla de resolución nos queda:
+
+\[\resol{\{A_1,\dots,A_m,Q\}\ \{B_1,\dots,B_n,\lnot Q\}}{\{A_1,\dots,A_m, B_1,\dots,B_n\}}\]
+
+En el método de resolución, cada \xbf{paso de resolución} consiste en agregar a un conjunto $S$ la resolvente $C$ de dos cláusulas $C_1, C_2$ que pertenecen a $S$ (asumimos que $C$ no pertenecía a $S$). Lo importante es que cada paso de resolución preserva la insatisficabilidad, por lo que $S$ es insatisfacible sii $S \cup \{C\}$ es insatisfacible.
+
+Por último, un conjunto de cláusulas se llama una \xbf{refutación} si contiene a la cláusula vacía ($\square$), que es insatisfacible.
+
+El método de resolución trata de construir una secuencia de conjuntos de cláusulas, obtenidas usando pasos de resolución hasta llegar a una refutación.
+
+\[S_1 \implies S_2 \implies \dots \implies S_n \ni \square\]
+
+Con lo cual, se sabe que el conjunto inicial de cláusulas es insatisfacible.
+
+\paragraph{Terminación de la regla de resolución}
+
+La aplicación reiterada de esta regla siempre termina (suponiendo que cada resolvente que se agrega es nuevo). Esto se puede ver ya que:
+
+\begin{itemize}
+  \item El resolvente se forma con los literales distintos que aparecen en el conjunto de cláusulas de partida $S$.
+  \item Hay una cantidad finita de literales en el conjunto de cláusulas de partida $S$.
+\end{itemize}
+
+\begin{teo}
+  Dado un conjunto finito $S$ de cláusulas, $S$ es insatisfacible sii tiene una refutación.
+\end{teo}
+
+\paragraph{Recapitulando}
+
+Para probar que $A$ es una tautología:
+\begin{enumerate}
+  \item Calculamos la FNC de $\lnot A$
+  \item Aplicamos el método de resolución.
+  \item Si hallamos una refutación, $\lnot A$ es insatisfacible, y por lo tanto $A$ es una tautología.
+  \item Si no, $\lnot A$ es satisfacible, y por lo tanto $A$ no es una tautología.
+\end{enumerate}
+
+\subsubsection{Repaso lógica de primer orden}
+
+\paragraph{Sintaxis}
+
+Un lenguaje de primer orden $\mathcal{L}$ consiste en:
+
+\begin{itemize}
+  \item Un conjunto numerable de constantes $c_0, c_1, \dots$
+  \item Un conjunto numerable de símbolos de función con aridad $n > 0$, $f_0, f_1, \dots$
+  \item Un conjunto numerable de símbolos de predicado con aridad $n \geq 0$, $P_0, P_1, \dots$.
+\end{itemize}
+
+Sea $\mathcal{V}$ un conjunto numerable de variables. El conjunto de $\mathcal{L}$-términos se define inductivamente como:
+\begin{itemize}
+  \item Toda constante de $\mathcal{L}$ y toda variable es un $\mathcal{L}$-término
+  \item Si $t_1,\dots,t_n \in \mathcal{L}$-términos y $f$ es un símbolo de función de aridad $n$, entonces $f(t_1,\dots,t_n) \in \mathcal{L}$-términos
+\end{itemize}
+
+El cónjunto de $\mathcal{L}$-fórmulas atómicas se define inductivamente como:
+\begin{itemize}
+  \item Todo símbolo de predicado de aridad 0 es una $\mathcal{L}$-fórmula atómica
+  \item Si $t_1,\dots,t_n \in \mathcal{L}$-términos y $P$ es un símbolo de predicado de aridad $n$, entonces $P(t_1,\dots,t_n) \in \mathcal{L}$-fórmulas atómicas
+\end{itemize}
+
+El cónjunto de $\mathcal{L}$-fórmulas se define inductivamente como:
+\begin{itemize}
+  \item Toda $\mathcal{L}$-fórmula atómica es una $\mathcal{L}$-fórmula
+  \item Si $A,B \in \mathcal{L}$-fórmulas, entonces $(A \land B)$, $(A \lor B)$, $(A \supset B)$, $(A \iff B)$ y $\lnot A$ son $\mathcal{L}$-fórmulas
+  \item Para toda variable $x_i$ y cualquier $\mathcal{L}$-fórmula $A$, $\forall x_i.A$ y $\exists x_i.A$ son $\mathcal{L}$-fórmulas
+\end{itemize}
+
+Las variables pueden ocurrir libres o ligadas. Los cuantificadores ligan variables. Usamos $FV(A)$ y $BV(A)$ para referirnos a las variables libres y ligadas respectivamente de $A$.
+
+Una fórmula $A$ se dice rectificada si
+\begin{itemize}
+  \item $FV(A)$ y $BV(A)$ son disjuntos y
+  \item Cuantificadores distintos de $A$ ligan variables distintas.
+\end{itemize}
+
+Toda fórmula se puede rectificar (renombrando variable ligadas) a una fórmula lógica equivalente. Una sentencia es una fórmula cerrada (sin variables libres).
+
+\paragraph{Semántica}
+
+Dado un lenguaje de primer orden $\mathcal{L}$, una estructura para $\mathcal{L}$ es un par $(M,I)$ donde
+\begin{itemize}
+  \item $M$ (dominio) es un conjunto no vacío.
+  \item $I$ (función de interpretación) asigna funciones y predicados sobre $M$ a símbolos de $\mathcal{L}$ de la siguiente manera:
+  \begin{enumerate}
+    \item Para toda constante $c$, $I(c) \in M$
+    \item Para toda función $f$ de aridad $n > 0$, $I(f): M^n \to M$
+    \item Para todo predicado $P$ de aridad $n \geq 0$, $I(P) : M^n \to \{T,F\}$
+  \end{enumerate}
+\end{itemize}
+
+Sea $(M,I)$ una estructura para $\mathcal{L}$. Una asignación es una función $s:\mathcal{V} \to M$, y la relación $s \models_{(M,I)} A$ establece que la asignación $s$ satisface la fórmula $A$ en la estructura $(M,I)$.
+
+Entonces,
+\begin{itemize}
+  \item Una fórmula $A$ es satisfacible en $(M,I)$ sii existe una asignación $s$ tal que $s \models_{(M,I)} A$.
+  \item Una fórmula $A$ es satisfacible sii existe una estructura $(M,I)$ tal que $A$ es satisfacible en $(M,I)$.
+  \item Una fórmula $A$ es válida en $(M,I)$ sii $s \models_{(M,I)} A$, para toda asignación $s$.
+  \item Una fórmula $A$ es válida sii es válida en toda estructura $(M,I)$.
+  \item Luego, $A$ es válida sii $\lnot A$ es insatisfacible.
+\end{itemize}
+
+
+\begin{teo}[Teorema de Church]
+  No existe un algoritmo que pueda determinar si una fórmula de primer orden es válida.
+
+  Como consecuencia, el método de resolución que mostramos no es un procedimiento efectivo, sino que es un algoritmo de semi-decision:
+  \begin{itemize}
+    \item Si una sentencia es insatisfacible hallará una refutación,
+    \item Pero si es satisfacible puede que no se detenga.
+  \end{itemize}
+\end{teo}
+
+
+\subsection{Método de resolución para lógica de primer orden}
+
+\subsection{Clausulas de Horn y resolución SLD}
+
+\subsection{Prolog}
+
+Es un lenguaje de programación lógico presentado en el año 1971. Los programas se escriben en un subconjunto de la lógica de primer orden, y el mecanismo teórico en el que se basa es el método de resolución.
