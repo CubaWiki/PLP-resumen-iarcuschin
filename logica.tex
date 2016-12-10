@@ -14,7 +14,7 @@
   \item Ejecución lenta en comparación con otros paradigmas.
 \end{itemize}
 
-\subsubsection{Repaso lógica proposicional}
+\subsection{Repaso lógica proposicional}
 
 \paragraph{Sintaxis}
 
@@ -175,7 +175,7 @@ Para probar que $A$ es una tautología:
   \item Si no, $\lnot A$ es satisfacible, y por lo tanto $A$ no es una tautología.
 \end{enumerate}
 
-\subsubsection{Repaso lógica de primer orden}
+\subsection{Repaso lógica de primer orden}
 
 \paragraph{Sintaxis}
 
@@ -331,7 +331,7 @@ La forma normal de Skolem de $A$ (escrito como $SK(A)$) se puede definir recursi
     Notar que dado que $A$ está rectificada, cada $f_x$ y $c_x$ es única.
 \end{itemize}
 
-\xit{Tip}: siempre conviene skolemizar de afuera hacía adentro, para evitar cambios innecesarios.
+\xit{Tip}: siempre conviene skolemizar de afuera hacia adentro, para evitar cambios innecesarios.
 
 \paragraph{Forma normal conjuntiva (FNC)}
 
@@ -382,8 +382,166 @@ Incorpora una regla adicional que es útil en algunos casos: \xit{factorización
 
 donde $\sigma$ es el MGU de $\{B_1,\dots,B_k\}$.
 
-\subsection{Clausulas de Horn y resolución SLD}
+\subsection{Resolución lineal}
+
+Si bien el método de resolución general es completo, hallar refutaciones es un proceso muy caro en el caso general ya que el espacio de búsqueda producido puede ser enorme. Además, hay un alto grado de no-determinismo
+\begin{itemize}
+  \item ¿Qué cláusulas elegimos? Hace falta una Regla de búsqueda.
+  \item ¿Qué literales eliminamos? Hace falta una Regla de selección.
+\end{itemize}
+
+Estas reglas ayudan a reducir el espacio de búsqueda, y es deseable que estas restricciones no reunien a la completitud del método.
+
+Una secuencia de pasos de resolución a partir de $S$ es \xbf{lineal} si es de la forma:
+
+\begin{center}
+  \begin{tikzpicture}
+      \tikzstyle{ann} = [draw=none,fill=none,right]
+      \node[draw=none, fill=none] (C0) at (0,0) {$C_0$};
+      \node[draw=none, fill=none] (B1) at (-2,0) {$B_1$};
+      \node[draw=none, fill=none] (C1) at (0,-1) {$C_1$};
+      \node[draw=none, fill=none] (s1) at (1,-1) {$\sigma_1$};
+      \node[draw=none, fill=none] (B2) at (-2,-1) {$B_2$};
+      \node[draw=none, fill=none] (C2) at (0,-2) {$C_2$};
+      \node[draw=none, fill=none] (s2) at (1,-2) {$\sigma_2$};
+      \node[draw=none, fill=none] (aux) at (0,-3) {\dots};
+      \node[draw=none, fill=none] (Bp) at (-2,-3) {$B_p$};
+      \node[draw=none, fill=none] (Cp) at (0,-4) {$C_p = \square$};
+      \node[draw=none, fill=none] (sp) at (1,-4) {$\sigma_p$};
+      \path [-](B1) edge node {} (C1);
+      \path [-](C0) edge node {} (C1);
+      \path [-](B2) edge node {} (C2);
+      \path [-](C1) edge node {} (C2);
+      \path [-](C2) edge node {} (aux);
+      \path [-](Bp) edge node {} (Cp);
+      \path [-](aux) edge node {} (Cp);
+  \end{tikzpicture}
+\end{center}
+
+donde $C_0$ y cada $B_i$ es un elemento de $S$ o algún $C_j$ con $j < i$. Es decir, para cada nuevo paso de resolución tengo que usar el último resolvente que generé y algún elemento de $S$.
+
+Observaciones de la resolución lineal:
+\begin{itemize}
+  \item En general, reduce el espacio de búsqueda considerablemente.
+  \item Preserva completitud.
+  \item Sin embargo, sigue siendo altamente no-determinísitco.
+\end{itemize}
+
+\subsection{Clausulas de Horn}
+
+Es un tipo de subclase de fórmulas para las cuales existen procesos eficientes para producir refutaciones sin perder completitud.
+
+Una cláusula de Horn es una disyunciónd e literales que tiene \xit{a lo sumo} un literal positivo. Para conjuntos de cláusulas de Horn puede la resolución SLD, que tiene buenas propiedades.
+
+Dividimos estas cláusulas en 3 grupos:
+\begin{itemize}
+  \item \xit{Goal}: todos los literales negativos.
+  \item \xit{Definición}: tiene exactamente un literal positivo. Puede ser:
+    \begin{itemize}
+      \item \xit{Regla}: un literal positivo, y todos los demás negativos.
+      \item \xit{Hecho}: sólo un literal positivo.
+    \end{itemize}
+\end{itemize}
+
+Tener en cuenta que no todas las fórmulas de primer orden pueden expresarse como una cláusula de Horn.
+
+\subsection{Resolución SLD}
+
+Es una variante de la resolución lineal.
+
+Sea $S = P \cup \{G\}$ un conjunto de cláusulas de Horn (con nombres de variables disjuntos) tal que
+\begin{itemize}
+  \item $P$ es un conjunto de cláusulas de definición y
+  \item $G$ es una cláusulas \xit{goal} o negativa.
+\end{itemize}
+
+Decimos que $S$ son las cláusulas de entrada. $P$ se conoce como el programa o base de conocimientos y $G$ es el objetivo o meta.
+
+Luego, una secuencia de pasos de resolución SLD para $S$ es una secuencia $\langle N_0, \dots, N_p \rangle$ de cláusulas negativas que satisfacen:
+\begin{itemize}
+  \item $N_0$ es el goal $G$.
+  \item Para todo $N_i$ en la secuencia, $0 < i < p$, si $N_i$ es
+  \[\lnot A_1,\dots,\lnot A_{k-1},\lnot A_k,\lnot A_{k+1},\dots,\lnot A_n\]
+  entonces hay alguna cláusula de definición $C_i$ de la forma $\{A, \lnot B_1,\dots, \lnot B_m\}$ en $P$ tal que $A_k$ y $A$ son unificables con MGU $\sigma$, y si
+    \begin{itemize}
+      \item $m = 0$, entonces $N_{i+1}$ es $\{\sigma(\lnot A_1,\dots,\lnot A_{k-1},\lnot A_{k+1},\dots,\lnot A_n)\}$
+      \item $m > 0$, entonces $N_{i+1}$ es $\{\sigma(\lnot A_1,\dots,\lnot A_{k-1}, \lnot B_1,\dots, \lnot B_m, \lnot A_{k+1},\dots,\lnot A_n)\}$
+    \end{itemize}
+\end{itemize}
+
+En el caso de que $\langle N_0, \dots, N_p \rangle$ sea una refutación, entonces $N_p = \square$. Y por ser lineal, tiene que tener la forma:
+
+\begin{center}
+  \begin{tikzpicture}
+      \tikzstyle{ann} = [draw=none,fill=none,right]
+      \node[draw=none, fill=none] (N0) at (0,0) {$N_0 = G$};
+      \node[draw=none, fill=none] (C1) at (-2,0) {$C_1$};
+      \node[draw=none, fill=none] (N1) at (0,-1) {$N_1$};
+      \node[draw=none, fill=none] (s1) at (1,-1) {$\sigma_1$};
+      \node[draw=none, fill=none] (C2) at (-2,-1) {$C_2$};
+      \node[draw=none, fill=none] (N2) at (0,-2) {$N_2$};
+      \node[draw=none, fill=none] (s2) at (1,-2) {$\sigma_2$};
+      \node[draw=none, fill=none] (aux) at (0,-3) {\dots};
+      \node[draw=none, fill=none] (Cp) at (-2,-3) {$C_p$};
+      \node[draw=none, fill=none] (Np) at (0,-4) {$N_p = \square$};
+      \node[draw=none, fill=none] (sp) at (1,-4) {$\sigma_p$};
+      \path [-](C1) edge node {} (N1);
+      \path [-](N0) edge node {} (N1);
+      \path [-](C2) edge node {} (N2);
+      \path [-](N1) edge node {} (N2);
+      \path [-](N2) edge node {} (aux);
+      \path [-](Cp) edge node {} (Np);
+      \path [-](aux) edge node {} (Np);
+  \end{tikzpicture}
+\end{center}
+
+Observaciones de la resolución SLD:
+\begin{itemize}
+  \item No se especifica regla de búsqueda ni de selección.
+  \item La sustitución respuesta es $\sigma_p \circ \dots \circ \sigma_2 \circ \sigma_1$
+  \item \xbf{Corrección:} Si un conjunto de cláusulas de Horn tiene refutación SLD, entonces es insatisfacible.
+  \item \xbf{Completitud:} Dado un conjunto de cláusulas de Honr $P \cup \{G\}$ tal como se describió, si $P \cup \{G\}$ es insatisfacible, existe una refutación SLD cuya primera cláusula es $G$.
+\end{itemize}
 
 \subsection{Prolog}
 
 Es un lenguaje de programación lógico presentado en el año 1971. Los programas se escriben en un subconjunto de la lógica de primer orden, y el mecanismo teórico en el que se basa es el método de resolución.
+
+En particular, utilizar resolución SLD con las siguientes restricciones:
+\begin{itemize}
+  \item \xbf{Regla de búsqueda:} se seleccionan las cláusulas de programa de arriba hacia abajo, en el orden en que fueron introducidas.
+  \item \xbf{Regla de selección:} seleccionar el átomo de más a la izquierda.
+\end{itemize}
+
+Estas dos reglas se definen como la \xit{estrategia}. Cada estrategia determina un árbol de búsqueda o árbol SLD.
+
+Dado que $(A_1 \land \dots \land A_n) \supset B \iff \lnot (A_1 \land \dots \land A_n) \supset B \iff \lnot A_1 \lor \dots \lor \lnot A_n \lor B$, tenemos que las cláusulas $P$ en Prolog se escriben
+\begin{itemize}
+  \item \xtt{B :- A\_1, \dots, A\_n.} para $\{B, A_1, \dots, \lnot A_n\}$ (reglas)
+  \item \xtt{B.} para $\{B\}$ (hechos)
+\end{itemize}
+
+\paragraph{Búsqueda de refutaciones SLD en Prolog}
+\begin{itemize}
+  \item Recorre el árbol SLD en profundidad (\xbf{DFS}), lo cual permite implementarlo de manera muy \xit{eficiente}:
+  \begin{itemize}
+    \item Se usa una pila para representar los átomos del goal.
+    \item Se hace un push del resolverte del átomo del tpo de la pila con la cláusula de definición.
+    \item Se hace un pop cuando el átomo del top de la pila no unifica con ninguna cláusula de definición más (luego, el átomo que queda en el tope se unifica con la siguiente cláusula de definición).
+  \end{itemize}
+  \item \xbf{Desventaja:} puede no llegar a enconrtar una refutación SLD aún si existe.
+\end{itemize}
+
+\paragraph{Operador Cut}
+
+Es una anotación que permite poder el árbol SLD, y se encuentra presente por cuestiones de eficiencia.
+
+\begin{itemize}
+  \item Cuando se selecciona un cut, tiene éxito inmediatamente.
+  \item Si, debido a backtracking, se vuelve a este cut, su efecto es el de hacer fallar el goal que le dio origen. De esta forma, forzamos determinismo (a lo sumo una solución).
+  \item En particular, todas las variables que estaban ligadas al momento de pasar por el cut, quedan ligadas por el resto de la ejecución del programa y no pueden cambiarse.
+\end{itemize}
+
+\paragraph{Negación por falla}
+
+DESARROLLAR
