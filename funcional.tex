@@ -14,6 +14,71 @@
   \item En el pasado: ejecución más lenta. Hoy en día no está tan claro que sea así.
 \end{itemize}
 
+\subsection{Fundamentos}
+
+\begin{itemize}
+  \item Se enfoca en la transformación de la información, y no tanto en la interación con el medio.
+  \item \xbf{Valores:} entidades (matemáticas) abstractas con ciertas propiedades.
+  \item \xbf{Expresiones:} cadenas de símbolos utilizadas para denotar valores. Se dividen en:
+    \begin{itemize}
+      \item Atómicas: llamadas también formas normales. Ejemplo: \xtt{2, False, (3, True)}.
+      \item Compuestas: se \xit{arman} combinando subexpresiones. Ejemplo: \xtt{(1+1), (2==1)}.
+    \end{itemize}
+  \item \xbf{Funciones:} son valores especiales que representan ``transformaciones de datos''. Notese que al ser valores, pueden ser argumento de otras funciones, resultado, almacenarse en estructuras de datos, ser estructuras de datos, etc. Llamamos funciones de \xbf{alto orden} a las funciones que trabajan con funciones.
+  \item \xbf{Transparencia referencial:} el valor de una expresión depende sólo de los elementos que la constituyen. Esto implica, por ejemplo, que los detalles de ejecución no influencían el comportamiento del programa. Además, existe la posibilidad de demostrar propiedades usando las propiedades de las subexpresiones y métodos de deducción lógica.
+  \item \xbf{Programa funcional:} es un conjunto de ecuaciones que definen una o más funciones. Para usarlo, resolvemos la reducción de la aplicación de una función a sus datos (reducción de una expresión).
+\end{itemize}
+
+Decimos que un \xbf{Lenguaje funcional puro} es aquel que es un ``lenguaje de expresiones con transparencia referencial y funciones como valores, cuyo modelo de cómputo es la reducción realizada mediante el remplazo de iguales por iguales''.
+
+\subsection{Tipos}
+
+Toda expresión válida denota un valor. Además, todo valor pertenece a un conjunto, y los tipos denotan conjuntos.
+Es decir, toda expresión debería tener un tipo para ser válida.
+
+\paragraph{Inferencia de tipos:} dada una expresión \xtt{e}, determinar si tiene tipo o no según las reglas, y cuál es ese tipo.
+
+\paragraph{Chequeo de tipos:} dada una expresión \xtt{e} y un tipo \xtt{A}, determinar si \xtt{e} tipa \xtt{A} (\xtt{e :: A}) según las reglas, o no.
+
+\paragraph{Sistema de tipado fuerte (string typing):} acepta una expresión si, y solo si, ésta tiene tipo según las reglas.
+
+\paragraph{Sistema de Hindley-Milner} es un sistema de tipos que propone:
+
+\begin{itemize}
+  \item Tipos básicos:
+    \begin{itemize}
+      \item Enteros: \xtt{Int}
+      \item Caracteres: \xtt{Char}
+      \item Booleanos: \xtt{Bool}
+    \end{itemize}
+  \item Tipos compuestos:
+    \begin{itemize}
+      \item Tuplas: \xtt{(A,B)}
+      \item Listas: \xtt{[A]}
+      \item Funciones: \xtt{(A -> B)}
+    \end{itemize}
+  \item \xbf{Polimorfismo:} permite que una expresión tenga más de un sólo tipo. El polimorfismo paramétrico soluciona esto usando \xbf{variables de tipos}, ejemplo: \xtt{id :: a -> a}.
+\end{itemize}
+
+\subsection{Currificación}
+
+Establece una correspondencia entre cada función de múltiples parámetros y una de alto orden que retorna una función intermedia que completa el trabajo. Es decir, por cada \xtt{f'} definida como:
+\begin{lstlisting}[language=Haskell]
+f' :: (a,b) -> c
+f' (x,y) = e
+\end{lstlisting}
+
+siempre se puede escribir
+
+\begin{lstlisting}[language=Haskell]
+f :: a -> (b -> c)
+(f x) y = e
+\end{lstlisting}
+
+O sea, que hay una correspondencia entre los tipos \xtt{(a,b) -> c} y \xtt{a -> (b -> c)}. Y se pueden hacer funciones \xtt{curry :: ((a,b) -> c) -> (a -> (b -> c))} y \xtt{uncurry :: (a -> (b -> c)) -> ((a,b) -> c)} que transformen funciones de un tipo al otro.
+
+\xit{Nota:} tener en cuenta que decir si algo está currificado o no puede ser una cuestión de interpretación. El ejemplo canónico es la función \xtt{distance :: (Int, Int) -> Int} que calcula la distancia euclidea de un punto al origen. Uno podría querer currificar el primer parámetro, pero entonces quizás sería menos obvio que la función espera un punto.
+
 \subsection{Haskell}
 
 \subsubsection{Repaso}
@@ -31,7 +96,9 @@
 
 \subsubsection{Esquemas de recursion}
 
-map y filter, etc.
+\subsubsection{Tipos algebraicos}
+
+\subsubsection{Pattern matching}
 
 \subsubsection{Monadas}
 
