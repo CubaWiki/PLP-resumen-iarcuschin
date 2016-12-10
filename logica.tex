@@ -240,7 +240,6 @@ Entonces,
   \item Luego, $A$ es válida sii $\lnot A$ es insatisfacible.
 \end{itemize}
 
-
 \begin{teo}[Teorema de Church]
   No existe un algoritmo que pueda determinar si una fórmula de primer orden es válida.
 
@@ -251,8 +250,137 @@ Entonces,
   \end{itemize}
 \end{teo}
 
-
 \subsection{Método de resolución para lógica de primer orden}
+
+Cuando trabajamos en lógica de primer orden también tenemos una FNC en notación de conjuntos, Forma clausal, pero requiere tener en cuenta los cuantificadores ($\forall$ y $\exists$). Podemos llevar una fórmula de primer orden a Forma clausal con los siguientes pasos:
+
+\begin{enumerate}
+  \item \xbf{Eliminar implicaciones}.
+  \item \xbf{Pasar a Forma normal negada}.
+  \item \xbf{Pasar a Forma normal prenexa (opcional)}.
+  \item \xbf{Pasar a Forma normal de Skolem (puede hacer antes del paso anterior)}.
+  \item \xbf{Pasar a Forma normal conjuntiva}.
+  \item \xbf{Distribuir cuantificadores universales}.
+\end{enumerate}
+
+Todos estos pasos preservan validez lógica, salvo la \xit{Skolemización}, que preserva satisfacibilidad.
+Vamos cada paso en detalle.
+
+\paragraph{Eliminar implicaciones}
+
+Consiste en escribir la fórmula en términos de $\land, \lor, \lnot, \forall, \exists$.
+
+\paragraph{Forma normal negada (FNN)}
+
+Se define inductivamente como:
+\begin{itemize}
+  \item Para cada fórmula atómica $A$, $A$ y $\lnot A$ están en FNN.
+  \item Si $A, B \in$ FNN entonces $(A \land B), (A \lor B) \in$ FNN.
+  \item Si $A \in$ FNN, entonces $\forall x.A, \exists x.A \in$ FNN.
+\end{itemize}
+
+Y podemos definir las siguientes reglas para hacer el pasaje más sencillo:
+\begin{itemize}
+  \item $\lnot (A \land B)$ pasa a $(\lnot A \lor \lnot B)$
+  \item $\lnot (A \lor B)$ pasa a $(\lnot A \land \lnot B)$
+  \item $\lnot\lnot A$ pasa a $A$
+  \item $\lnot\forall x.A$ pasa a $\exists x.\lnot A$
+  \item $\lnot\exists x.A$ pasa a $\forall x.\lnot A$
+\end{itemize}
+
+\paragraph{Forma normal prenexa}
+
+Consiste en pasar todos los cuantificadores ($\forall$ y $\exists$) al principio de la fórmula. También contamos con reglas para ayudar a hacer el pasaje:
+\begin{itemize}
+  \item $(\forall x.A) \land B$ pasa a $\forall x. (A \land B)$
+  \item $(A \land \forall x.B)$ pasa a $\forall x. (A \land B)$
+  \item $(\exists x.A) \land B$ pasa a $\exists x. (A \land B)$
+  \item $(A \land \exists x.B)$ pasa a $\exists x. (A \land B)$
+  \item $(\forall x.A) \lor B$ pasa a $\forall x. (A \lor B)$
+  \item $(A \lor \forall x.B)$ pasa a $\forall x. (A \lor B)$
+  \item $(\exists x.A) \lor B$ pasa a $\exists x. (A \lor B)$
+  \item $(A \lor \exists x.B)$ pasa a $\exists x. (A \lor B)$
+\end{itemize}
+
+\paragraph{Forma normal de Skolem}
+
+El objetivo de este paso es
+\begin{itemize}
+  \item Eliminar los cuantificadores existenciales ($\exists$)
+  \item Sin alterar la satisfacibilidad (y por lo tanto la insatisfacibilidad).
+\end{itemize}
+
+Para esto, introducimos \xit{testigos} (parámetros), tal que:
+\begin{itemize}
+  \item Todo cuantificador existencial se reemplaza por una constante o función de Skolem. Ejemplo $\exists x. P(x)$ pasa a $P(c)$, con $c$ una nueva constante.
+  \item Cada ocurrencia de una subfórmula $\exists x. B$ se reemplaza en la fórmula $A$ por $B\{x \from f(x_1, \dots, x_n)\}$, donde $f$ es un símbolo de función nuevo y las $x_1, \dots, x_n$ son las variables de las que depende $x$ en $B$. Por ejemplo $\forall x.\exists y. P(x,y)$ pasa a $\forall x. P(x, g(x))$.
+\end{itemize}
+
+\xit{Nota}: no es posible eliminar los cuantificadores existenciales sin alterar la validez. Ejemplo: $\exists x. (P(a) \supset P(x))$ es válida pero $P(a) \supset P(b)$ no lo es.
+
+La forma normal de Skolem de $A$ (escrito como $SK(A)$) se puede definir recursivamente. Sea $A'$ cualquier subfórmula de $A$:
+\begin{itemize}
+  \item Si $A'$ es una fórmula atómica o su negación, $SK(A') = A'$.
+  \item Si $A'$ es de la forma $(B \star C)$ con $\star \in \{\land, \lor\}$, entonces $SK(A') = (SK(B) \star SK(C))$.
+  \item Si $A'$ es de la forma $\forall x.B$, entonces $SK(A') = \forall x.SK(B)$.
+  \item Si $A'$ es de la forma $\exists x.B$ y $\{x, y_1, \dots, y_m\}$ son las variables libres de B (que se ligan en $A$, dado que $A$ es sentencia), entonces
+    \begin{itemize}
+      \item Si $m > 0$, crear un nuevo símbolo de función de Skolem, $f_x$ de aridad $m$ y definir $SK(A') = SK(B\{x \from f_x(y_1, \dots, Y_m)\})$
+      \item Si $m = 0$, crear una nueva constante de Skolem $c_x$ y definir $SK(A') = SK(B\{x \from c_x\})$
+    \end{itemize}
+    Notar que dado que $A$ está rectificada, cada $f_x$ y $c_x$ es única.
+\end{itemize}
+
+\xit{Tip}: siempre conviene skolemizar de afuera hacía adentro, para evitar cambios innecesarios.
+
+\paragraph{Forma normal conjuntiva (FNC)}
+
+Este paso es identico a como hacíamos cuando estabamos trabajando con fórmulas proposicionales. Llevamos la fórmula a la forma
+
+\[C_1 \land \dots \land C_r\]
+
+ donde cada $C_i$ es una disyunción de literales.
+
+\paragraph{Distribuir cuantificadores universales}
+
+Consiste en distribuir los cuantificadores sobre cada conjunción usando la fórmula válida $\forall x.(A\land B) \iff \forall x. A \land \forall x. B$ arrojando una conjunción de cláusulas
+
+\[\forall x_1,\dots,x_n C_1 \land \dots \land \forall y_1,\dots,y_m C_r\]
+
+ donde cada $C_i$ es una disyunción de literales.
+
+Por último, lo simplificamos escribiendo $\{C_1, \dots, C_r\}$
+
+\paragraph{Regla de resolución para lógica de primer orden}
+
+Ahora que tenemos nuesta fórmula en correctamente Forma Clausal veamos como hacemos para aplicar resolución.
+
+Cómo motivación, consideremos la fórmula $(\forall x. P(x)) \land \lnot P(a)$, que claramente es insatisfacible. Sin embargo, no podemos aplicar la regla de resolución estandar, ya que $P(x)$ y $P(a)$ no son identicos\dots\ pero si son unificables.
+
+Definimos una nueva regla de resolución, como
+
+\[\resol{\{B_1,\dots,B_k,A_1,\dots,A_m\}\ \{\lnot D_1,\dots,\lnot D_j,C_1,\dots,C_n\}}{\sigma(\{A_1,\dots,A_m, C_1,\dots,C_n\})}\]
+
+donde $\sigma$ es el MGU de $\{B_1,\dots,B_k, D_1,\dots,D_j\}$. Algunas observaciones:
+\begin{itemize}
+  \item Asumimos que las cláusulas $\{B_1,\dots,B_k,A_1,\dots,A_m\}$ y $\{\lnot D_1,\dots,\lnot D_j,C_1,\dots,C_n\}$ no tienen variables en común; en caso contrario se renombran las variables.
+  \item Notar que $\sigma(B_1) = \dots = \sigma(B_k) = \sigma(D_1) = \dots = \sigma(D_j) $
+  \item La cláusula $\sigma(\{A_1,\dots,A_m, C_1,\dots,C_n\})$ se llama resolvente, igual que antes.
+\end{itemize}
+
+Análogamente al caso proposicional, tenemos las nociones de cláusula vacia, paso de resolución y refutación. Además, tenemos el siguiente resultado.
+
+\begin{teo}[Teorema de Herbrand-Skolem-Gödel]
+  Cada paso de resolución en lógica de primer orden preserva satisfacibilidad.
+\end{teo}
+
+\paragraph{Regla de resolución binaria}
+
+Incorpora una regla adicional que es útil en algunos casos: \xit{factorización}
+
+\[\resol{\{B_1,\dots,B_k,A_1,\dots,A_m\}}{\sigma(\{B_1,A_1,\dots,A_m\})}\]
+
+donde $\sigma$ es el MGU de $\{B_1,\dots,B_k\}$.
 
 \subsection{Clausulas de Horn y resolución SLD}
 
