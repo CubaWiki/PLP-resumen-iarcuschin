@@ -462,7 +462,7 @@ Para formalizar la semántica operacional, primero debemos preguntarnos: ¿Qué 
       \item $\mu\ {\scriptstyle \medoplus}\ (l \mapsto V)$ es el store extendido resultante de amliar $\mu$ con una nueva asociación $l \mapsto V$ (asumimos $l \notin Dom(\mu)$).
     \end{itemize}
   \item Además, $\Gtipa{l}{?}$ depende de los valores que se almacenen en la dirección $l$. Esta situación es parecida a las variables libres, con lo que precisamos un ``contexto de tipado'' para direcciones: $\Sigma$ función parcial de direcciones a tipos. Con esto, armamos un nuevo juicio de tipado: $\GStipa{M}{\sigma}$.
-  \item Y los juicios de evaluación, en vez de ser de la forma $M \to M'$, ahora son  $M \vert \mu \to M' \vert \mu'$.
+  \item Y los juicios de evaluación, en vez de ser de la forma $M \to M'$, ahora son  $M \vert \mu \to M' \vert \mu'$. Que se lee como: ``Teniendo la expresión $M$, el store $\mu$ reduce la expresión a $M'$, y nos queda el store $\mu'$''.
 \end{itemize}
 
 Entonces, las reglas de tipado nos terminan quedando:
@@ -491,9 +491,45 @@ Notar que hasta ahora las reglas no modifican el store.
 
 \paragraph{Preservación y progreso}
 
-\todo{Falta mostrar que hay que reformular esos conceptos, porque los rompimos al introducir el sistema de tipos para las direcciones}
+Habíamos visto antes que \xit{Corrección = Preservación + Progreso}. Sin embargo, al introducir el sistema de tipos para las direcciones ($\Sigma$) rompimos ambos conceptos.
+
+Esto se puede ver teniendo en cuenta que $\GStipa{M}{\sigma}$ y $M \vert \mu \to M' \vert \mu'$ implica $\GStipa{M'}{\sigma}$. Pero si suponemos, por ejemplo, que: $M = !l, \Gamma = \emptyset, \Sigma(l) = Nat, \mu(l) = true$, entonces $\GStipa{M}{Nat}$ y $M \vert \mu \to true \vert \mu$, pero $\GStipa{true}{Nat}$ no vale.
+
+Para la \xit{preservación}, precisamos una noción de compatibilidad entre el store y el contexto de tipado para store. Entonces, debemos tipar los stores. Con este objetivo introducimos un nuevo juicio de tipado: $\Gamma|\Sigma \rhd \mu$, y se define del siguiente modo: $\Gamma|\Sigma \rhd \mu$ sii
+\begin{enumerate}
+  \item $Dom(\Sigma) = Dom(\mu)$ y
+  \item $\GStipa{\mu(l)}{\Sigma(l)}$ para todo $l \in Dom(\mu)$.
+\end{enumerate}
+
+Y tenemos una nueva formulación de \xit{preservación}. Si pasa:
+\begin{itemize}
+  \item $\GStipa{M}{\sigma}$
+  \item $M \vert \mu \to N \vert \mu'$
+  \item $\Gamma|\Sigma \rhd \mu$
+\end{itemize}
+implica que existe $\Sigma' \supset \Sigma$ tal que $\Gamma|\Sigma' \rhd N : \sigma$ y $\Gamma|\Sigma' \rhd \mu'$. Donde el $\Sigma'$ se utiliza ya que $\Sigma$ puede haber crecido en dominio por posibles reservas de memoria.
+
+Para el \xit{progreso}. Si $M$ es cerrado y bien tipado (i.e. $\emptyset|\Sigma \rhd M : \sigma$, para algún $\Sigma, \sigma$) entonces:
+\begin{itemize}
+  \item $M$ es un valor,
+  \item  o bien para cualquier store $\mu$ tal que $\emptyset|\Sigma \rhd \mu$, existe $M'$ y $\mu'$ tal que $M \vert \mu \to M' \vert \mu'$
+\end{itemize}
 
 \paragraph{Recursión}
+
+Una ecuación recursiva es aquella que tiene la pinta $f = \dots f \dots f \dots$ (se usa a si misma en la definición). Esta extensión permite construir funciones recursivas.
+
+Agregamos a las expresiones:
+
+\[M :: \dots \vert fix\ M\]
+
+No se precisan nuevos tipos, pero sí una regla de tipado:
+
+\[\deriv{\Gtipa{M}{\sigma_1 \to \sigma_1}}{\Gtipa{fix\ M}{\sigma_1}}{T-Fix}\]
+
+No hay valorse nuevos. La semantica operacional es:
+
+\[\deriv{M_1 \to M_1'}{fix\ M_1 \to fix\ M_1'}{E-Fix}\quad\quad \deriv{}{fix\ (\abs{x}{\sigma}{M}) \to \sust{M}{x\from fix\  (\abs{x}{\sigma}{M})}}{E-FixBeta}\]
 
 \subsubsection{Inferencia de tipos}
 
