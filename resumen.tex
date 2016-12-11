@@ -29,6 +29,13 @@
             pdfcreator={},
             hidelinks]{hyperref}
 
+\DeclareMathOperator*\medoplus{\mathchoice
+  {\textstyle\bigoplus}
+  {\textstyle\bigoplus}
+  {\scriptstyle\bigoplus}
+  {\scriptscriptstyle\bigoplus}
+}
+
 \theoremstyle{plain}
 \newtheorem*{teo}{Teorema}
 \newtheorem*{pro}{Proposición}
@@ -65,6 +72,8 @@
 \newcommand{\w}[1]{\ensuremath{\mathbb{W}(#1)}}
 \newcommand{\uni}[0]{\ \stackrel{\mathclap{\normalfont\mbox{.}}}{=}\ }
 \newcommand{\unito}[0]{\mapsto}
+\newcommand{\Gtipa}[2]{\ensuremath{\Gamma \rhd #1 : #2}}
+\newcommand{\GStipa}[2]{\ensuremath{\Gamma|\Sigma \rhd #1 : #2}}
 
 %resolucion
 \newcommand{\resol}[2]{\ensuremath{\frac{#1}{#2}}}

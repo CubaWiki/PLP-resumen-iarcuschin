@@ -245,6 +245,26 @@ En los casos de sustitución que haya conflictos, podemos renombrar apropiadamen
 
 Es un sistema formal de deducción (o derivación) que utiliza axiomas y reglas de tipado para caracterizar un subconjunto de los términos llamados \xit{tipados}. Es decir, es un sistema mediante el cual podemos deducir el tipo de un término.
 
+Sin embargo, el objetivo del sistema de tipos de lambda cálculo es asegurar que si un término es cerrado, está bien tipado y termina, entonces evalúa a un valor (a menos que se mantengan formas normales que no sean valores para representar errores).
+
+La correctitud del sistema de tipos se basa en el progreso y la preservación. El progreso indica que si se tiene un término $M$ cerrado y bien tipado, entonces es un valor, o existe un $M'$ tal que el primero evalúa en el segundo. La preservación se refiere a que el progreso preserva tipos.
+
+En resumen:
+
+\begin{itemize}
+  \item Corrección = Progreso + Preservación.
+  \item \xbf{Progreso}: si $M$ es cerrado y bien tipado entonces
+    \begin{itemize}
+      \item $M$ es un valor
+      \item o bien existe $M'$ tal que $M \to M'$.
+    \end{itemize}
+    Esto quiere decir que la evaluación no puede trabarse para términos cerrados y bien tipados que no son valores.
+  \item \xbf{Preservación}: si $\Gamma \rhd M : \sigma$ y $M \to N$, entonces $\Gamma \rhd N : \sigma$. Es decir que la evaluación preserva tipos.
+\end{itemize}
+
+
+Ahora presentamos algunas nociones.
+
 Un \xit{contexto de tipado} $\Gamma$ es un conjunto de pares $\{x_1:\sigma_1,\dots,x_n:\sigma_n\}$ donde cada $x_i$ es distinto. Los $x_i$ representan las variables y los $\sigma_i$ sus tipo asignado.
 
 Un \xit{juicio de tipado} es una expresión de la forma $\Gamma \rhd M : \sigma$ que significa que el término $M$ tiene tipo $\sigma$ asumiendo el contexto de tipado $\Gamma$. Estos juicios se generan utilizando \xit{axiomas y reglas de tipado}. Ejemplo de axioma:
@@ -314,28 +334,166 @@ El \xbf{Juicio de evaluación en muchos pasos} $\toto$ es la clausura reflexiva,
   \item Si un término está bien tipado, y termina, entonces evalúa a un valor.
 \end{itemize}
 
-\paragraph{Propiedades de \xit{Corrección}:}
-
-\begin{itemize}
-  \item Corrección = Progreso + Preservación.
-  \item \xbf{Progreso}: si $M$ es cerrado y bien tipado entonces
-    \begin{itemize}
-      \item $M$ es un valor
-      \item o bien existe $M'$ tal que $M \to M'$.
-    \end{itemize}
-    Esto quiere decir que la evaluación no puede trabarse para términos cerrados y bien tipados que no son valores.
-  \item \xbf{Preservación}: si $\Gamma \rhd M : \sigma$ y $M \to N$, entonces $\Gamma \rhd N : \sigma$. Es decir que la evaluación preserva tipos.
-\end{itemize}
-
 \subsubsection{Extensiones}
 
+La versión más usada en la materia del Lambda Cálculo es $\lambda^{bn}$: que tiene $Bool$, $Nat$ y funciones, pero existen varias extensiones que aportan nuevas herramientas.
+
+Cuando definimos una extensión del Cálculo $\lambda$ tenemos que re-definir (o indicar que es lo que se agrega):
 \begin{itemize}
-  \item $\lambda^{bn}$: tiene $Bool$, $Nat$ y funciones.
-  \item Registros
-  \item Declaraciones locales
-  \item Referencias
-  \item Recursión
+  \item Expresiones válidas
+  \item Tipos
+  \item Reglas de tipado
+  \item Valores
+  \item Reglas de semántica
 \end{itemize}
+
+\paragraph{Registros}
+
+Llamada $\lambda^{\dots r}$. Permite utilizar descriptores de campos de la pinta: $\{nombre: String, edad: Nat\}$.
+
+Agregamos al conjunto de tipos:
+
+\[\sigma :: \dots \vert \{I_i : \sigma_i^{\ i \in 1..n}\}\]
+
+Y al conjunto de expresiones:
+
+\[M :: \dots \vert \{I_i = M_i^{\ i \in 1..n}\} \vert M.I\]
+
+Informalmente:
+\begin{itemize}
+  \item El regsitro $\{I_i = M_i^{\ i \in 1..n}\}$ evalúa a $\{I_i = V_i^{\ i \in 1..n}\}$ donde $V_i$ es el valor al que evalúa $M_i$, $i \in 1..n$.
+  \item $M.I$: evaluar $M$ hasta que arroje $\{I_i = V_i^{\ i \in 1..n}\}$, luego proyectar el campo correspondiente.
+\end{itemize}
+
+Entonces, las reglas de tipado son:
+
+\[\deriv{\Gamma \rhd M_i : \sigma_i\quad \forall i \in I = \{1..n\}}{\Gamma \rhd \{I_i = M_i^{\ i \in 1..n}\}:\{I_i : \sigma_i^{\ i \in 1..n}\}}{T-Rcd}\]
+
+\[\deriv{\Gamma \rhd M : \{I_i : \sigma_{i}^{\ i \in 1..n}\}\quad j\in 1..n}{\Gamma \rhd M.I_j : \sigma_j}{T-Proj}\]
+
+Los valores se expanden a:
+
+\[V :: \dots \vert \{I_i = V_i^{\ i \in 1..n}\}\]
+
+Y las reglas de semantica operacional son:
+
+\[\deriv{j \in 1..n}{\{I_i = V_i^{\ i \in 1..n}\}.I_j \to V_j}{E-ProjRcd}\]
+
+\[\deriv{M \to M'}{M.I \to M'.I}{E-Proj}\]
+
+\[\deriv{M_j \to M_j'}{\{I_i = V_i^{\ i \in 1..j-1}, I_j = M_j, I_i = M_i^{\ i \in j+1..n}\} \to \{I_i = V_i^{\ i \in 1..j-1}, I_j = M_j', I_i = M_i^{\ i \in j+1..n}\}}{E-Rcd}\]
+
+\paragraph{Declaraciones locales}
+
+Esta extensión nos ayuda a mejorar la legibilidad. Agregamos a las expresiones:
+
+\[M :: \dots \vert let\ x : \sigma = M\ in\ N\]
+
+Informalmente, $let\ x : \sigma = M\ in\ N$ evalua $M$ a un valor $V$, liga la variable $x$ a $V$ y evalua $N$.
+Esta extensión no agrega tipos nuevos.
+
+Las reglas de tipado son:
+
+\[\deriv{\Gamma \rhd M : \sigma_1\quad \Gamma, x: \sigma_1 \rhd N : \sigma_2}{\Gamma \rhd let\ x : \sigma_1 = M\ in\ N : \sigma_2}{T-Let}\]
+
+Y la semántica operacional:
+
+\[\deriv{M_1 \to M_1'}{let\ x : \sigma = M_1\ in\ M_2 \to let\ x : \sigma = M_1'\ in\ M_2}{E-Let}\]
+
+\[\deriv{}{let\ x : \sigma = V_1\ in\ M_2 \to \sust{M_2}{x \from V_1}}{E-LetV}\]
+
+\paragraph{Referencias}
+
+En la extensión anterior $let\ x : Nat = \underline{2}\ in\ M$
+\begin{itemize}
+  \item $x$ es una variable declarada con valor 2.
+  \item El valor de $x$ permanece \xit{inalterado} a lo largo de la evaluación de $M$.
+  \item En este sentido, $x$ es \xit{inmutable}: no existe una operación de asignación.
+\end{itemize}
+
+En programación imperativa pasa todo lo contrario: Todas las variables son mutables.
+Entonces, vamos a extender Cálculo Lambda Tipado con variables mutables (y lo llamamos $\lambda^{bnru}$, pero la $r$ es de referencias).
+
+Las operaciones básicas que vamos a manejar son:
+\begin{itemize}
+  \item Alocación (reserva de memoria): $ref\ M$ genera una referencia fresca cuyo contenido es el valor de $M$.
+  \item Derreferenciación (lectura): $!x$ sigue la referencia $x$ y retorna su contenido.
+  \item Asignación: $x := M$ almacena en la referencia $x$ el valor de $M$.
+\end{itemize}
+
+Estas 3 operaciónes son \xbf{comandos}: expresiones que no interesan por su valor, sino por su \xbf{efecto}. Entonces, decimos que se evalúan para causar un efecto, y lo expresamos con un nuevo valor $unit$.
+
+En este momento nos estamos alejando de lo que serían un lenguaje funcional puro, en el que las expresiones son puras en el sentido de carecer de efectos.
+
+Los tipos de $\lambda^{bnu}$ son:
+
+\[\sigma :: Bool \vert Nat \vert \sigma\to\rho \vert Unit \vert Ref \sigma \]
+
+Las expresiones nos quedan:
+
+\[M :: x \vert \abs{x}{\sigma}{M} \vert \app{M}{N} \vert unit \vert ref\ M \vert !M \vert M := N \vert l \]
+
+Notar que $Unit$ es un tipo unitario: el único valor posible de una expresión de ese tipo es $unit$. Cumple un rol similar a $void$ en C o Java. Por otro lado, $Ref \sigma$ es el tipo de las referencias a valores de tipo $\sigma$.
+
+En primer lugar, podemos introducir una forma de evaluar varias expresiones en \xbf{secuencia}:
+
+\[M_1; M_2 \eqdef \app{(\abs{x}{Unit}{M_2})}{M_1}\quad x\notin FV(M_2)\]
+
+Entonces, la evaluación de $M_1; M_2$ consiste en primero evaluar $M_1$  y luego $M_2$. Este comportamiento funciona debido a las reglas de evaluación definidas previamente para $\lambda^{bn}$.
+
+El conjunto de valores son:
+
+\[V ::= true \vert false \vert 0 \vert n \vert unit \vert \abs{x}{\sigma}{M} \vert l \]
+
+Y las reglas de tipado:
+
+\[\deriv{}{\Gamma \rhd unit : Unit}{T-Unit}\quad\quad \deriv{\Gtipa{M_1}{\sigma}}{\Gtipa{ref\ M_1}{Ref\ \sigma}}{T-Ref}\]
+
+\[\deriv{\Gtipa{M_1}{Ref\ \sigma}}{\Gtipa{!M_1}{\sigma}}{T-DeRef}\quad\quad \deriv{\Gtipa{M_1}{Ref\ \sigma}\quad \Gtipa{M_2}{\sigma}}{\Gtipa{M_1 := M_2}{Unit}}{T-Assign}\]
+
+Para formalizar la semántica operacional, primero debemos preguntarnos: ¿Qué es una referencia? Rta: Es una abstracción de una porción de memoria que se encuentra en uso. Entonces debemos formalizar el concepto de memoria o \xit{store}:
+
+\begin{itemize}
+  \item Usaremos direcciones (simbólicas) o ``locations'' $l, l_i \in \mathcal{L}$ para representar referencias, con lo que el \xit{store} no es más que una función parcial de direcciones a valores.
+  \item Usamos las letras $\mu, \mu'$ para referirnos a stores.
+  \item Notación:
+    \begin{itemize}
+      \item $\mu[l \mapsto V]$ es el store resultante de pisar $\mu(l)$ con $V$.
+      \item $\mu\ {\scriptstyle \medoplus}\ (l \mapsto V)$ es el store extendido resultante de amliar $\mu$ con una nueva asociación $l \mapsto V$ (asumimos $l \notin Dom(\mu)$).
+    \end{itemize}
+  \item Además, $\Gtipa{l}{?}$ depende de los valores que se almacenen en la dirección $l$. Esta situación es parecida a las variables libres, con lo que precisamos un ``contexto de tipado'' para direcciones: $\Sigma$ función parcial de direcciones a tipos. Con esto, armamos un nuevo juicio de tipado: $\GStipa{M}{\sigma}$.
+  \item Y los juicios de evaluación, en vez de ser de la forma $M \to M'$, ahora son  $M \vert \mu \to M' \vert \mu'$.
+\end{itemize}
+
+Entonces, las reglas de tipado nos terminan quedando:
+
+\[\deriv{}{\GStipa{unit}{Unit}}{T-Unit}\quad\quad \deriv{\GStipa{M_1}{\sigma}}{\GStipa{ref\ M_1}{Ref\ \sigma}}{T-Ref}\]
+
+\[\deriv{\GStipa{M_1}{Ref\ \sigma}}{\GStipa{!M_1}{\sigma}}{T-DeRef}\quad\quad \deriv{\GStipa{M_1}{Ref\ \sigma}\quad \GStipa{M_2}{\sigma}}{\GStipa{M_1 := M_2}{Unit}}{T-Assign}\]
+
+\[\deriv{\Sigma(l) = \sigma}{\GStipa{l}{Ref\ \sigma}}{T-Loc}\]
+
+Y la semántica operacional:
+
+\[\deriv{M_1 \vert \mu \to M_1' \vert \mu'}{\app{M_1}{M_2} \vert \mu \to \app{M_1'}{M_2} \vert \mu'}{E-App1}\quad\quad \deriv{M_2 \vert \mu \to M_2' \vert \mu'}{\app{V_1}{M_2} \vert \mu \to \app{V_1}{M_2'} \vert \mu'}{E-App2}\]
+
+\[\deriv{}{\abs{x}{\sigma}{V} \vert \mu \to \sust{M}{x \from V} \vert \mu}{E-AppAbs}\]
+
+Notar que hasta ahora las reglas no modifican el store.
+
+\[\deriv{M_1 \vert \mu \to M_1' \vert \mu'}{!M_1 \vert \mu \to !M_1' \vert \mu'}{E-Deref}\quad\quad \deriv{\mu(l) = V}{!l \vert \mu \to V \vert \mu}{E-DerefLoc}\]
+
+\[\deriv{M_1 \vert \mu \to M_1' \vert \mu'}{M_1 := M_2 \vert \mu \to M_1' := M_2 \vert \mu'}{E-Assign1}\quad\quad \deriv{M_2 \vert \mu \to M_2' \vert \mu'}{V := M_2 \vert \mu \to V := M_2' \vert \mu'}{E-Assign2}\]
+
+\[\deriv{}{l := V \vert \mu \to unit \vert \mu[l \mapsto V]}{E-Assign}\]
+
+\[\deriv{M_1 \vert \mu \to M_1' \vert \mu'}{ref\ M_1 \vert \mu \to ref\ M_1' \vert \mu'}{E-Ref}\quad\quad \deriv{l \notin Dom(\mu)}{ref\ V \vert \mu \to l \vert \mu\ {\scriptstyle \medoplus}\ (l \mapsto V)}{E-RefV}\]
+
+\paragraph{Preservación y progreso}
+
+\todo{Falta mostrar que hay que reformular esos conceptos, porque los rompimos al introducir el sistema de tipos para las direcciones}
+
+\paragraph{Recursión}
 
 \subsubsection{Inferencia de tipos}
 

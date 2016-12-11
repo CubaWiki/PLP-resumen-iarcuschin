@@ -175,9 +175,9 @@ Esto es así ya que si un contexto/programa $P$ espera una expresión $f$ de tip
 
 Recordemos las reglas de tipado para registros:
 
-\[\deriv{\Gamma \rhd M_i : \sigma_i\quad \forall i \in I = \{1..n\}}{\Gamma \rhd \{I_i = M_i\}_{i\in I}:\{I_i : \sigma_i\}_{i\in I}}{T-Rcd}\]
+\[\deriv{\Gamma \rhd M_i : \sigma_i\quad \forall i \in I = \{1..n\}}{\Gamma \rhd \{I_i = M_i^{\ i \in 1..n}\}:\{I_i : \sigma_i^{\ i \in 1..n}\}}{T-Rcd}\]
 
-\[\deriv{\Gamma \rhd M : \{I_i : \sigma_{i}^{i\in 1..n}\}\quad j\in 1..n}{\Gamma \rhd M.I_j : \sigma_j}{T-Proj}\]
+\[\deriv{\Gamma \rhd M : \{I_i : \sigma_{i}^{\ i \in 1..n}\}\quad j\in 1..n}{\Gamma \rhd M.I_j : \sigma_j}{T-Proj}\]
 
 Cuando pensamos en registros, lo primero que queremos hacer es lograr que subtipen a lo ``ancho''. Es decir, que valga por ejemplo, \subt{\{nombre: String, edad: Int\}}{\{nombre: String\}}, ya que en todos los contextos donde esperemos un registro con la etiqueta \xit{nombre} no nos importa si el registro además tiene otras etiquetas. Con este objetivo, introducimos la siguente regla de subtipado:
 

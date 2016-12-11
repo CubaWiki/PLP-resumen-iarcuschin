@@ -256,15 +256,7 @@ iterate::(a->a)->a->[a]
 iterate = fix (\rec sig base -> base:(rec sig (sig base)))
 \end{lstlisting}
 
-\subsection*{Ejercicio 6} Cuando definimos una extensión del Cálculo $\lambda$ tenemos que definir:
-\begin{itemize}
-  \item Expresiones válidas
-  \item Tipos
-  \item Reglas de tipado
-  \item Valores
-  \item Reglas de semántica
-\end{itemize}
-
+\subsection*{Ejercicio 6}
 Las expresiones que nos plantea el enunciado son:
 
 \[M ::= \dots \vert raise_\sigma\ M \vert try\ M_1, M_2, \dots, M_n\ with\ N\]
