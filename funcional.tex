@@ -102,6 +102,81 @@ O sea, que hay una correspondencia entre los tipos \xtt{(a,b) -> c} y \xtt{a -> 
 
 \subsubsection{Monadas}
 
+Una mónada es un tipo paramétrico \xtt{M a} con operaciones
+
+\begin{lstlisting}[language=Haskell]
+return :: a -> M a
+(>>=) :: M a -> (a -> M b) -> M b
+\end{lstlisting}
+
+que satisfacen las siguientes leyes
+
+\begin{lstlisting}[language=Haskell]
+return x >>= k              = k x
+m >>= \x -> return x        = m
+m >>= \x -> (n >>= \y -> p) = (m >>= \x -> n) >>= \y -> p
+    (siempre que x no aparezca en p)
+\end{lstlisting}
+
+El objetivo de la Mónada es incorporar \xit{efectos} a un valor.
+\begin{itemize}
+  \item El tipo \xtt{M a} incorpora la información necesaria.
+  \item \xtt{return x} representa a \xtt{x} con \xit{efecto nulo}.
+  \item \xtt{(>>=)} \xit{secuencia} efectos con \xit{dependencia} de datos.
+\end{itemize}
+
+Es una forma de abstraer comportamientos específicos en un cómputo. Cada mónaad se diferencia de las demás por sus operaciones adicionales:
+\begin{itemize}
+  \item \xtt{Maybe} tiene \xtt{fail}
+  \item \xtt{State} tiene \xtt{incrementar}
+  \item \xtt{Output} tiene \xtt{imprimir}
+  \item etc.
+\end{itemize}
+
+Haskell define una clase para las mónadas
+
+\begin{lstlisting}[language=Haskell]
+class Monad m where
+  return :: a -> m a
+  (>>=) :: m a -> (a -> m b) -> m b
+\end{lstlisting}
+
+Por ejemplo, para definir \xtt{Maybe} como una mónada se escribe
+
+\begin{lstlisting}[language=Haskell]
+instance Monad Maybe where
+  return x = Just x
+  m >>= k = case m of
+    Nothing -> Nothing
+    Just x -> k x
+\end{lstlisting}
+
+\paragraph{Funciones generales}
+
+Pueden definirse muchas funciones de uso general usando sólo la interfase de mónadas
+\begin{lstlisting}[language=Haskell]
+liftM :: Monad m => (a -> b) -> m a -> m b
+liftM f mx = do
+  x <- mx
+  return (f x)
+
+liftM2 :: Monad m => (a -> b -> c) -> m a -> m b -> m c
+liftM2 f mx my = do x <- mx
+  y <- my
+  return (f x y)
+\end{lstlisting}
+
+Estas funciones pueden usarse para definir funciones específicas para la aplicación, por ejemplo:
+
+\begin{lstlisting}[language=Haskell]
+(</>) :: Monad m => m Float -> m Float -> m Float
+(</>) = liftM2 (/)
+
+eval :: Monad m => E -> m Float
+eval (Cte n) = return n
+eval (Div e1 e2) = eval e1 </> eval e2
+\end{lstlisting}
+
 \subsection{Lambda cálculo}
 
 Fue introducido por \xit{Alonzo Church} en 1934, y presenta un modelo de comptuación basado en \xbf{funciones}.
@@ -437,4 +512,4 @@ El caso de $pred$ es similar.
     \end{itemize}
 \end{itemize}
 
-TERMINAR DE ESCRIBIR LOS CASOS DEL ALGORITMO
+\todo{TERMINAR DE ESCRIBIR LOS CASOS DEL ALGORITMO}

@@ -1,0 +1,242 @@
+\section*{Práctica 8 - Ejercicios para el final}
+
+\subsection*{Ejercicio 1}
+
+\paragraph{1.} Para armar el esquema de recursión estructural, primero tenemos que identificar los constructores:
+\begin{itemize}
+  \item \xtt{Nil}: toma 0 parámetros.
+  \item \xtt{Tern a (AT a) (AT a) (AT a)}: toma 4 parámetros (una raíz y los 3 árboles hijos).
+\end{itemize}
+
+Por lo que, si asumimos que nuestro tipo de salida es \xtt{b}, el esquema \xtt{foldAT} va a recibir 3 parámetros:
+\begin{itemize}
+  \item Un \xtt{b}, que es el que devolvemos cuando el \xtt{AT a} es \xtt{Nil}.
+  \item Y una función \xtt{f::a->b->b->b->b} que dada una raíz, y el resultado recursivo en los 3 árboles hijos, nos devuelve un \xtt{b}.
+  \item El árbol \xtt{AT a} sobre el cual se va a hacer el \xit{fold}.
+\end{itemize}
+
+Entonces, la función queda:
+\begin{lstlisting}[language=Haskell]
+foldAT::b->(a->b->b->b->b)->AT a->b
+foldAT base _ Nil = base
+foldAT base f (Tern a izq cent der) = f a (recu izq) (recu cent) (recu der)
+    where recu = foldAT base f
+\end{lstlisting}
+
+\paragraph{2.} El esquema de recursión primitiva es similar al anterior, pero en el paso recursivo tenemos acceso a cual es el árbol que estamos procesando.
+
+\begin{lstlisting}[language=Haskell]
+recAT::b->(AT a->b->b->b->b)->AT a->b
+recAT base f Nil = base
+recAT base f arbol@(Tern a izq cent der) = f arbol (recu izq) (recu cent) (recu der)
+    where recu = recAT base f
+\end{lstlisting}
+
+\paragraph{3.} Usando recursión explicita tenemos que:
+
+\begin{lstlisting}[language=Haskell]
+esSubarbol::Eq a => AT a->AT a->Bool
+esSubarbol Nil _ = True
+esSubarbol uno otro@(Tern a izq cent der) = uno == otro || recu izq || recu cent || recu der
+    where recu = esSubarbol uno
+\end{lstlisting}
+
+Notemos que en la definición necesitamos si o si el árbol ``otro'' ya que lo necesitamos para el caso en que el árbol ``uno'' no es es subArbol de izq, cent o der. Entonces, podemos reescribirla usando \xtt{recAT}:
+
+\begin{lstlisting}[language=Haskell]
+esSubarbol::Eq a => AT a->AT a->Bool
+esSubarbol Nil _ = True
+esSubarbol uno = recAT True (\otro recuIzq recuCent recuDer->uno == otro || recuIzq || recuCent || recuDer)
+\end{lstlisting}
+
+\todo{REVISAR}
+
+\subsection*{Ejercicio 2}
+\begin{lstlisting}[language=Haskell]
+funcionizar::Eq a => [a]->[b]->a->Maybe b
+funcionizar _ [] _ = Nothing
+funcionizar [] _ _ = Nothing
+funcionizar (x:xs) (y:ys) p | p == x = y
+                            | otherwise = funcionizar xs ys p
+\end{lstlisting}
+
+\subsection*{Ejercicio 3}
+\begin{lstlisting}[language=Haskell]
+inversaAcotada::Eq b => (a->b)->[a]->b->Maybe a
+inversaAcotada f dom = funcionizar (map f dom) dom
+\end{lstlisting}
+
+\subsection*{Ejercicio 4}
+\paragraph{1.} Igual que en el Ejercicio 1, identificamos los constructores:
+\begin{itemize}
+  \item \xtt{Cte Float}: toma 1 parámetro.
+  \item \xtt{Suma expr expr}: toma 2 parámetro.
+  \item \xtt{Div expr expr}: toma 2 parámetro.
+\end{itemize}
+
+Si asumimos que nuestro tipo de salida es \xtt{b}, el esquema \xtt{foldExpr} va a recibir 4 parámetros:
+\begin{itemize}
+  \item Una función \xtt{f::Float->b}, que se va a usar cuando la \xtt{expr} es constante.
+  \item Una función \xtt{g::b->b->b}, que se va a usar cuando la \xtt{expr} es una suma.
+  \item Una función \xtt{h::b->b->b}, que se va a usar cuando la \xtt{expr} es una división.
+  \item La \xtt{expr} sobre la cual se va a hacer el \xit{fold}.
+\end{itemize}
+
+Entonces, la función queda:
+\begin{lstlisting}[language=Haskell]
+foldExpr::(Float->b)->(b->b->b)->(b->b->b)->expr->b
+foldExpr f _ _ (Cte x) = f x
+foldExpr f g h (Suma e1 e2) = g (recu e1) (recu e2)
+    where recu = foldExpr f g h
+foldExpr f g h (Div e1 e2) = h (recu e1) (recu e2)
+    where recu = foldExpr f g h
+\end{lstlisting}
+
+\paragraph{2.} Primero con recursión explicita
+\begin{lstlisting}[language=Haskell]
+eval::expr->Maybe (Float,String)
+eval (Cte x) = Just (x, "")
+eval (Suma e1 e2) =
+    case (eval e1) of
+      Nothing->Nothing
+      Just (res1, traza1)->
+        case (eval e2) of
+          Nothing->Nothing
+          Just (res2, traza2)->Just (res1 + res2, traza1 ++ traza2)
+eval (Div e1 e2) =
+    case (eval e1) of
+      Nothing->Nothing
+      Just (res1, traza1)->
+        case (eval e2) of
+          Nothing->Nothing
+          Just (res2, traza2)->if res2 != 0 then Just (res1 / res2, traza1 ++ traza2) else Nothing
+\end{lstlisting}
+
+\paragraph{3.} Ahora usando \xtt{foldExpr}
+\begin{lstlisting}[language=Haskell]
+eval::expr->Maybe (Float,String)
+eval = foldExpr (\x->Just (x, ""))
+                (\r1 r2->
+                  case r1 of
+                    Nothing->Nothing
+                    Just (res1, traza1)->
+                      case r2 of
+                        Nothing->Nothing
+                        Just (res2, traza2)->Just (res1 + res2, traza1 ++ traza2))
+                (\r1 r2->
+                  case r1 of
+                    Nothing->Nothing
+                    Just (res1, traza1)->
+                      case r2 of
+                        Nothing->Nothing
+                        Just (res2, traza2)->if res2 != 0 then Just (res1 / res2, traza1 ++ traza2) else Nothing)
+\end{lstlisting}
+
+\paragraph{4.} Nos dan como pista el tipo:
+\begin{lstlisting}[language=Haskell]
+data Evaluation = Ev (String->Maybe (Float,String))
+\end{lstlisting}
+
+Y el objetivo es poder definir \xtt{eval} como \xtt{eval expr = applyEv (evalM expr) ""}. Además, sabemos que:
+\begin{lstlisting}[language=Haskell]
+applyEv :: Evaluation -> String -> Maybe (Float, String)
+applyEv (Ev f) s = f s
+\end{lstlisting}
+
+Y que \xtt{evalM::expr->Evaluation}.
+
+Usando la técnica de los recuadros para abstraer las partes comunes entre \xtt{Suma} y \xtt{Div}, tenemos las siguientes funciones comunes:
+
+\begin{lstlisting}[language=Haskell]
+instance Monad Evaluation where
+  -- return :: (String -> Maybe (Float, String) -> Evaluation
+  return f = Ev f
+  -- (>>=) :: Evaluation -> ((String -> Maybe (Float, String)) -> Evaluation) -> Evaluation
+  (>>=) (Ev f) g = g f
+\end{lstlisting}
+
+Y las funciones específicas:
+
+\begin{lstlisting}[language=Haskell]
+liftM2 :: Monad m => (a -> b -> c) -> m a -> m b -> m c
+liftM2 f mx my = do x <- mx
+  y <- my
+  return (f x y)
+
+(</>) :: Monad m => m Float -> m Float -> m Float
+(</>) = mx my = do
+  x <- mx
+  y <- my
+  if y == 0 then Nothing else return (x/y)
+
+(<+>) :: Monad m => m Float -> m Float -> m Float
+(<+>) = liftM2 (+)
+\end{lstlisting}
+
+Con lo que ya podemos escribir
+
+\begin{lstlisting}[language=Haskell]
+evalM::expr->Evaluation
+evalM (Cte x) = returnM (x, "")
+evalM (Suma e1 e2) =
+  evalM e1 >>= \v1 ->
+  evalM e2 >>= \v2 ->
+  return v1 <+> v2
+evalM (Div e1 e2) =
+  evalM e1 >>= \v1 ->
+  evalM e2 >>= \v2 ->
+  return v1 </> v2
+\end{lstlisting}
+
+\begin{lstlisting}[language=Haskell]
+evalM::expr->Evaluation
+evalM (Cte x) = returnM (x, "")
+evalM (Suma e1 e2) =
+  evalM e1 >>= \(r1, traza1) ->
+  evalM e2 >>= \(r2, traza2) ->
+  returnM (r1 + r2, traza1 ++ traza2)
+evalM (Div e1 e2) =
+  evalM e1 >>= \(r1, traza1) ->
+  evalM e2 >>= \(r2, traza2) ->
+  if r2 == 0
+    then failM
+    else returnM (r1 / r2, traza1 ++ traza2)
+\end{lstlisting}
+
+Que, agregandole \xit{syntatic sugar}, es lo mismo que:
+
+\begin{lstlisting}[language=Haskell]
+evalM::expr->Evaluation
+evalM (Cte x) = returnM (x, "")
+evalM (Suma e1 e2) = do
+  v1 <- evalM e1
+  v2 <- evalM e2
+  return v1 <+> v2
+evalM (Div e1 e2) = do
+  v1 <- evalM e1
+  v2 <- evalM e2
+  return v1 </> v2
+\end{lstlisting}
+
+\begin{lstlisting}[language=Haskell]
+evalM::expr->Evaluation
+evalM (Cte x) = returnM (x, "")
+evalM (Suma e1 e2) = do
+  (r1, traza1) <- evalM e1
+  (r2, traza2) <- evalM e2
+  returnM (r1 + r2, traza1 ++ traza2)
+evalM (Div e1 e2) = do
+  (r1, traza1) <- evalM e1
+  (r2, traza2) <- evalM e2
+  if r2 == 0
+    then failM
+    else returnM (r1 / r2, traza1 ++ traza2)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Haskell]
+evalM (Cte x) = returnM x
+evalM (Div e1 e2) = do
+  v1 <- evalM e1
+  v2 <- evalM e2
+  return v1 </> v2
+\end{lstlisting}

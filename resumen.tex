@@ -13,7 +13,9 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{calc}
 \usetikzlibrary{babel}
+
 \usepackage{listings}
+\lstset{breaklines=true}
 
 \usepackage{chngcntr}
 \counterwithin*{equation}{section}
@@ -46,6 +48,7 @@
 \newcommand{\xit}[0]{\textit}
 \newcommand{\xbf}[0]{\textbf}
 \newcommand{\xtt}[0]{\texttt}
+\newcommand{\todo}[1]{{\color{red} \xbf{#1}}}
 
 %lambda calculo
 \newcommand{\abs}[3]{\ensuremath{\lambda#1:#2.#3}}
@@ -93,5 +96,9 @@
 
 \newpage
 \input{objetos.tex}
+
+\newpage
+\appendix
+\input{practica-final.tex}
 
 \end{document}
