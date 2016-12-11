@@ -114,7 +114,7 @@ Se necesita más delegación cuando:
 
 Los bloques son simplemente un pedazo de código. Closure agrega \xit{Binding Lexicográfico} de variables a los bloques. Full Closure agrega además un control apropiado de flujo.
 
-\subsection{Sistemas de tipos}
+\subsection{Sistema de tipos}
 
 Algunos errores de tipos habituales en un languaje orientado a objetos suelen ser:
 \begin{itemize}
@@ -145,15 +145,57 @@ Ahora, podemos empezar a armar axiomas y reglas de subtipado. Para los tipos bas
 
 \paragraph{El tipo Top}
 
-\todo{COMPLETAR}
+Se puede ver como representando la clase \xtt{Object} en Samlltalk.
 
-\paragraph{Subtipado de registros}
+\[\deriv{}{\subt{\sigma}{Top}}{S-Top}\]
 
-\todo{COMPLETAR}
+\xit{Notar} que \subt{Top\to Top}{Top}.
 
 \paragraph{Subtipado de funciones}
 
-\todo{COMPLETAR}
+Para las funciones, tenemos la siguiente regla de subtipado:
+
+\[\deriv{\subt{\sigma'}{\sigma}\ \subt{\tau}{\tau'}}{\subt{\sigma\to\tau}{\sigma'\to\tau'}}{S-Func}\]
+
+Observar que el sentido de $<:$ se da ``vuelta'' para el tipo del argumento, pero no para el tipo del resultado.
+Entonces, decimos que el constructor de tipos de función es \xbf{contravariante} en su primer argumento y \xbf{variante} en el segundo.
+
+Esto es así ya que si un contexto/programa $P$ espera una expresión $f$ de tipo $\sigma'\to\tau'$ puede recibir otra de tipo $\sigma\to\tau$ si se dan las condiciones indicadas:
+
+\begin{itemize}
+  \item Toda aplicación de $f$ está aplicada a argumentos de tipo $\sigma'$
+  \item Los mismos se coercionan a argumentos del tipo $\sigma$. Es decir que $\sigma$ es más específico que $\sigma'$. Que es lo mismo que decir que $\sigma'$ es más general que $\sigma$.
+  \item Luego se aplica la función, cuyo tpo real es $\sigma\to\tau$.
+  \item Finalmente se coerciona el resultado a $\tau'$, el tipo del resultado que $P$ está esperando. Esto quiere decir que $\tau'$ es más específico que $\tau$. Que es lo mismo que decir que $\tau$ es más general que $\tau'$.
+\end{itemize}
+
+\todo{Revisar lo de más específico y más general}
+
+\paragraph{Subtipado de registros}
+
+Recordemos las reglas de tipado para registros:
+
+\[\deriv{\Gamma \rhd M_i : \sigma_i\quad \forall i \in I = \{1..n\}}{\Gamma \rhd \{I_i = M_i\}_{i\in I}:\{I_i : \sigma_i\}_{i\in I}}{T-Rcd}\]
+
+\[\deriv{\Gamma \rhd M : \{I_i : \sigma_{i}^{i\in 1..n}\}\quad j\in 1..n}{\Gamma \rhd M.I_j : \sigma_j}{T-Proj}\]
+
+Cuando pensamos en registros, lo primero que queremos hacer es lograr que subtipen a lo ``ancho''. Es decir, que valga por ejemplo, \subt{\{nombre: String, edad: Int\}}{\{nombre: String\}}, ya que en todos los contextos donde esperemos un registro con la etiqueta \xit{nombre} no nos importa si el registro además tiene otras etiquetas. Con este objetivo, introducimos la siguente regla de subtipado:
+
+\[\deriv{}{\subt{\{I_i : \sigma_i \vert I \in 1..n + k\}}{\{I_i:\sigma_i \vert I \in 1..n\}}}{S-RcdWidth}\]
+
+Sin embargo, esta regla sóla tiene una limitación. En los casos como \subt{\{a: Alumno, b: Int\}}{\{a:Persona\}}, la regla anterior no funcionaría, ya que si bien es la misma estiqueta ``a'', el tipo es distinto. Pero nos gustaría que funcionara, ya que esperamos una Persona, y \xbf{un Alumno es una Persona} (\subt{Alumno}{Persona}). Entonces, introducimos la regla de subtipado de registros en ``profundidad'':
+
+\[\deriv{\subt{\sigma_i}{\tau_i}\quad i\in I = \{1..n\}}{\subt{\{I_i : \sigma_i\}_{i\in I}}{\{I_i : \tau_i\}_{i\in I}}}{S-RcdDepth}\]
+
+Por último, si tenemos un caso como \subt{\{b: Int, a: Alumno\}}{\{a:Persona\}} las reglas anteriores no funcionan. Esto tiene sentido que funcione, ya que los registros son descriptores de campos, y no deberían depender del orden dado. Entonces, agregamos la siguiente regla:
+
+\[\deriv{\{k_j : \sigma_j \vert j\in 1..n\} \text{ es permutación de } \{I_i : \tau_i \vert i \in 1..n\}}{\subt{\{k_j : \sigma_j \vert j\in 1..n\}}{\{I_i : \tau_i \vert i \in 1..n\}}}{S-RcdPerm}\]
+
+Notar que (S-RcdPerm) puede usarse en combinación con (S-RcdWidth) y (S-Trans) para eliminar campos en cualquier parte del registro.
+
+Ahora, combinemos las 3 reglas en una sola (\xit{one rule to rule them all}):
+
+\[\deriv{\{I_i \vert i \in 1..n\} \subset \{k_j \vert j \in 1..m\}\quad k_j = I_i \implies \subt{\sigma_j}{\tau_i}}{\subt{\{k_j : \sigma_j \vert j \in 1..m\}}{\{I_i : \tau_i \vert i \in 1..n\}}}{S-Rcd}\]
 
 \paragraph{Subtipado de referencias}
 

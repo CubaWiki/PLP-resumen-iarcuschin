@@ -472,13 +472,18 @@ El goal pasado a cláusula: $\{\lnot a(s(0),V,s(s(0)))\}$. Entonces,
 Seguimiento de \xtt{(c2 new) m3.}
 
 \begin{tabular}{| c | c | c |}
-  receptor & mensaje & resultado \\ \hfill
+  \hline
+  receptor & mensaje & resultado \\ \hline
   C2 & new (de C2) & unC2 \\
   C2 & new (de C1) & unC2 \\
   C2 & new (de Object) & unC2 \\
   unC2 & m3 & 23 \\
   unC2 & m1 (de C1) & 23 \\
   unC2 & m2 (de C2) & 23 \\
+  \hline
 \end{tabular}
 
 \subsection*{Ejercicio 18}
+
+1. Ref T , 3. Sink T , 5. Ref Sink T , 7. Source Source T ,
+2. Ref Ref T , 4. Source T , 6. Source Ref T , 8. Source Sink T .
