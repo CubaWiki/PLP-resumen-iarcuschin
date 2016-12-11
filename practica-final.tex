@@ -240,3 +240,245 @@ evalM (Div e1 e2) = do
   v2 <- evalM e2
   return v1 </> v2
 \end{lstlisting}
+
+\subsection*{Ejercicio 5} Sin usar \xtt{fix}, tenemos:
+\begin{lstlisting}[language=Haskell]
+iterate::(a->a)->a->[a]
+iterate sig base = base:(ite sig (sig base))
+\end{lstlisting}
+
+Por lo que con \xtt{fix}:
+\begin{lstlisting}[language=Haskell]
+fix :: (a -> a) -> a
+fix f = f (fix f)
+
+iterate::(a->a)->a->[a]
+iterate = fix (\rec sig base -> base:(rec sig (sig base)))
+\end{lstlisting}
+
+\subsection*{Ejercicio 6} Cuando definimos una extensión del Cálculo $\lambda$ tenemos que definir:
+\begin{itemize}
+  \item Expresiones válidas
+  \item Tipos
+  \item Reglas de tipado
+  \item Valores
+  \item Reglas de semántica
+\end{itemize}
+
+Las expresiones que nos plantea el enunciado son:
+
+\[M ::= \dots \vert raise_\sigma\ M \vert try\ M_1, M_2, \dots, M_n\ with\ N\]
+
+Y nos dicen que los valores no se modifican.
+
+Entonces, como nos dicen que las expresiones $M_1, M_2, \dots, M_n$ podrían dar error, agregamos a los tipos:
+
+\[\sigma ::= \dots \vert Try_\sigma \vert Error_\sigma\]
+
+Las nuevas reglas de tipado son:
+
+\[\deriv{\Gamma \rhd M : Nat}{\Gamma \rhd raise_\sigma M : Error_\sigma}{T-Raise}\]
+
+\[\deriv{\Gamma \rhd N : Nat \to \rho\quad \Gamma \rhd M_i : Try_{\sigma_i}\text{, con $1 \leq i \leq n$}}{\Gamma \rhd try\ M_1, M_2, \dots, M_n\ with\ N : \sigma_n}{T-Raise}\]
+
+Y las reglas de semántica:
+
+\[\deriv{}{try\ V_1, \dots, V_n\ with\ N \to V_n}{E-NoError}\]
+
+\[\deriv{M_i \to M_i'}{try\ V_1, \dots, M_i ,\dots, M_n\ with\ N \to try\ V_1, \dots, M_i' ,\dots, M_n\ with\ N}{E-UnPaso}\]
+
+\[\deriv{M_i \to raise_\sigma T}{try\ V_1, \dots, M_i ,\dots, M_n\ with\ N \to N\ T}{E-Error}\]
+
+\todo{REVISAR}
+
+\subsection*{Ejercicio 7}
+
+Claramente queremos hacer algo como
+
+\[pred \eqdef \lambda n : Nat. if iszero(n) then 0 else search (\lambda x: Nat. succ(y) == x)\]
+
+donde usamos el search para buscar el Nat anterior a n. El único problema es definir el predicado de igualdad entre Nat (==), ya que necesitaríamos usar pred, que es la que estamos definiendo.
+
+\todo{REVISAR}
+
+\subsection*{Ejercicio 8} La extensión básica de listas consiste en:
+
+\todo{Agregar algunas partes del ejercicio 17, práctica 2}
+
+Para ayudarnos, vamos a escribir primero el map usando el fix, pero en Haskell:
+
+\begin{lstlisting}[language=Haskell]
+fix :: (a -> a) -> a
+fix f = f (fix f)
+
+map :: (a->b) -> [a] -> [b]
+map = fix (\rec f l -> case l of
+              [] -> []
+              (x:xs) -> (f x):(rec f xs))
+\end{lstlisting}
+
+Entonces, lo traducimos a cálculo lambda:
+
+\[map_{\sigma,\tau} \eqdef fix\ (\abs{rec}{\rho\to\rho}{\abs{f}{\sigma\to\tau}{\abs{l}{[\sigma]}{case\ l\ of\ \{[] \to [] \vert h::t \to (f\ h)::((rec\ f)\ t)\}}}}) \]
+
+\todo{Revisar el tipo de rec}
+
+\subsection*{Ejercicio 9}
+
+\[\w{let\ x = U\ in\ V} = \Gamma \rhd S(let\ x = M\ in\ N')\]
+
+donde,
+
+\begin{itemize}
+  \item $\w{U} = \Gamma_1 \rhd M : \tau$
+  \item $\w{\sust{V}{x\from U}} = \Gamma_2 \rhd N: \sigma$
+  \item $S = MGU(\{\sigma_1 \uni \sigma_2 \vert x:\sigma_1 \in \Gamma_1, x:\sigma_2 \in \Gamma_2\}$
+  \item $N' = copiarAnotaciones(V,N)$
+  \item $\Gamma = S\Gamma_1 \cup S\Gamma_2$
+\end{itemize}
+
+\xit{Notar} que $N'$ y el predicado $copiarAnotaciones$ son necesarios porque el $N$ inferido es el que tiene la $x$ reemplazada por $U$. Si directamente usamos $N$ en la respuesta no sólo estamos anotando los tipos, sino también modificando la expresión.
+
+\todo{Falta usar el algoritmo nuevo con unos casos}
+
+\subsection*{Ejercicio 10}
+
+\todo{Usar el algoritmo del ejercicio 9 en algunos casos}
+
+\subsection*{Ejercicio 11}
+
+\todo{TODO}
+
+\subsection*{Ejercicio 12}
+
+\todo{TODO}
+
+\subsection*{Ejercicio 13}
+
+\paragraph{a.}
+
+\[\w{U\ V} = \Gamma \rhd S(M\ N)\]
+
+donde,
+
+\begin{itemize}
+  \item $\w{U} = \Gamma_1 \rhd M : \tau$
+  \item $\w{V} = \Gamma_2 \rhd N : \rho$
+  \item $t$ y $s$ variables frescas, tales que $s <: \rho$
+  \item $S = MGU(\{\tau \uni s\to t\} \cup \{\sigma_1 \uni \sigma_2 \vert x:\sigma_1 \in \Gamma_1, x:\sigma_2 \in \Gamma_2\}$
+  \item $\Gamma = S\Gamma_1 \cup S\Gamma_2$
+\end{itemize}
+
+\todo{Revisar}
+
+\paragraph{b.}
+
+\todo{aplicar el algoritmo del punto a}
+
+\subsection*{Ejercicio 14}
+
+\paragraph{1.}
+
+Pasar $\forall x\forall y\exists z (P(x,z)\land P(y,z))$ a Forma normal de Skolem. Por pasos:
+
+\begin{itemize}
+  \item Forma normal negada: idem.
+  \item Forma prenexa: idem.
+  \item Forma normal de Skolem: $\forall x\forall y (P(x,f(x,y))\land P(y,f(x,y)))$
+\end{itemize}
+
+\paragraph{2.}
+
+Pasar $\forall x\forall y((\exists z (P(x,z))\land (\exists z P(y,z))))$ a Forma normal de Skolem. Por pasos:
+
+\begin{itemize}
+  \item Forma normal negada: idem.
+  \item Forma prenexa: $\forall x\forall y\exists w\exists v (P(x,w)\land P(y,v))$.
+  \item Forma normal de Skolem: $\forall x\forall y (P(x,f(x,y))\land P(y,g(x,y)))$
+\end{itemize}
+
+\subsection*{Ejercicio 15}
+
+\paragraph{a.} ¿Cuál es la relación entre el árbol de resolución y el árbol de búsqueda de Prolog?
+
+El árbol de resolución sólo contiene los resultados exitosos que se van encontrando en el árbol de búsqueda.
+
+En este sentido, el árbol de resolución equivale a una refutación, mientras que el árbol de búsqueda utiliza las reglas de búsqueda y selección de prolog para ir explorando las soluciones mediante \xit{backtracking}.
+
+\todo{REVISAR}
+
+\paragraph{b.} ¿Qué hay que verificar antes de llamar al algoritmo mgu para unificar dos cláusulas?
+
+Hay que verificar que no compartan variables. Si este es el caso, hay que hacer un renombre de variables.
+
+\todo{REVISAR}
+
+\paragraph{c.} Calcular el resolvente entre las siguientes cláusulas: $\{P (x, y)\}, \{\lnot P (y, f (y))\}$.
+
+Primero renombramos a $\{P (x, w)\}, \{\lnot P (y, f (y))\}$.
+
+Luego, el resolvente es $\square$ usando $\{x\from y, w\from f(y)\}$.
+
+\subsection*{Ejercicio 16}
+
+Nuestra base de conocimientos:
+
+\begin{enumerate}
+  \item \xtt{a(U,0,U)}
+  \item \xtt{a(X,s(Y),s(Z)):-a(X,Y,Z)}
+\end{enumerate}
+
+Nuestro goal: \xtt{a(s(0),V,s(s(0)))}
+
+\paragraph{a.}
+\begin{center}
+  \begin{tikzpicture}
+      \tikzstyle{ann} = [draw=none,fill=none,right]
+      \node[draw=none, fill=none] (1a) at (0,0) {\xtt{a(s(0),V,s(s(0)))}};
+      \node[draw=none, fill=none] (2a) at (-5,-2) {\todo{x}, ya que no unifica};
+      \node[draw=none, fill=none] (2b) at (3,-2) {\xtt{a(s(0), Y, s(0))}, con $s_1=\{X\from \text{s(0)}, V\from \text{s(Y)}, Z\from \text{s(0)}\}$};
+      \node[draw=none, fill=none] (3a) at (-5,-4) {$\square$, con $s_2=\{U\from s(0), Y\from 0\}$};
+      \node[draw=none, fill=none] (3b) at (4.5,-4) {\xtt{a(s(0), Y, 0)}, con $s_3=\{X\from \text{s(0)}, Y\from \text{s(Y)}, Z\from \text{0}\}$};
+      \node[draw=none, fill=none] (4a) at (-5,-6) {\todo{x}, ya que no unifica};
+      \node[draw=none, fill=none] (4b) at (4.5,-6) {\todo{x}, ya que no unifica};
+      \path [->](1a) edge node[left] {1} (2a);
+      \path [->](1a) edge node[right] {2} (2b);
+      \path [->](2b) edge node[left] {1} (3a);
+      \path [->](2b) edge node[right] {2} (3b);
+      \path [->](3b) edge node[left] {1} (4a);
+      \path [->](3b) edge node[right] {2} (4b);
+  \end{tikzpicture}
+\end{center}
+
+Luego, nos queda una sola sustitución resultado: $s = s_2 \circ s_1 = \{X\from \text{s(0)}, V\from \text{s(0)}, Z\from \text{s(0)}, U\from s(0)\}$, con lo que nuestra única solución es $V= s(0)$.
+
+\paragraph{b.}
+
+La base de conocimientos pasadas a cláusulas:
+\begin{enumerate}
+  \item $\{a(U,0,U)\}$
+  \item $\{\lnot a(X,Y,Z), a(X,s(Y),s(Z))\}$
+\end{enumerate}
+
+El goal pasado a cláusula: $\{\lnot a(s(0),V,s(s(0)))\}$. Entonces,
+
+\begin{itemize}
+  \item Por 2, con $s_1=\{X\from \text{s(0)}, V\from \text{s(Y)}, Z\from \text{s(0)}\}$, tenemos la cláusula $4 = \{\lnot a(s(0), Y, s(0))\}$.
+  \item Por 1, con $s_2=\{U\from s(0), Y\from 0\}$, tenemos la cláusula $\square$.
+\end{itemize}
+
+\subsection*{Ejercicio 17}
+
+Seguimiento de \xtt{(c2 new) m3.}
+
+\begin{tabular}{| c | c | c |}
+  receptor & mensaje & resultado \\ \hfill
+  C2 & new (de C2) & unC2 \\
+  C2 & new (de C1) & unC2 \\
+  C2 & new (de Object) & unC2 \\
+  unC2 & m3 & 23 \\
+  unC2 & m1 (de C1) & 23 \\
+  unC2 & m2 (de C2) & 23 \\
+\end{tabular}
+
+\subsection*{Ejercicio 18}
