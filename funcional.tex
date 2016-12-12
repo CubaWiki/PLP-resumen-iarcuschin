@@ -359,6 +359,52 @@ Cuando definimos una extensión del Cálculo $\lambda$ tenemos que re-definir (o
   \item Reglas de semántica
 \end{itemize}
 
+\paragraph{Lambda Cálculo $\lambda^{bn}$}
+
+Este es el más común de todos. Las expresiones válidas son:
+
+\[ M ::= x \vert true \vert false \vert \ifte{M}{M}{M} \vert \abs{x}{\sigma}{M} \vert \app{M}{M} \vert 0 \vert succ(M) \vert pred(M) \vert iszero(M) \]
+
+Los tipos:
+
+\[ \sigma ::= Bool \vert Nat \vert \sigma\to\rho \]
+
+Las reglas de tipado:
+
+\[\deriv{}{\Gtipa{true}{Bool}}{T-True}\quad\quad \deriv{}{\Gtipa{false}{Bool}}{T-False}\quad\quad \deriv{x:\sigma\in\Gamma}{\Gtipa{x}{\sigma}}{T-Var}\]
+
+\[\deriv{}{\Gtipa{0}{Nat}}{T-Zero}\quad\quad \deriv{\Gtipa{M}{Nat}}{\Gtipa{iszero(M)}{Bool}}{T-IsZero}\]
+
+\[\deriv{\Gtipa{M}{Nat}}{\Gtipa{succ(M)}{Nat}}{T-Succ}\quad\quad \deriv{\Gtipa{M}{Nat}}{\Gtipa{pred(M)}{Nat}}{T-Pred}\]
+
+\[\deriv{\Gtipa{M}{Bool}\quad \Gtipa{P}{\sigma}\quad \Gtipa{Q}{\sigma}}{\Gtipa{\ifte{M}{P}{Q}}{\sigma}}{T-If}\]
+
+\[\deriv{\Gamma,x :\sigma \rhd M : \tau}{\Gtipa{\abs{x}{\sigma}{M}}{\sigma\to\tau}}{T-Abs}\quad\quad \deriv{\Gtipa{M}{\sigma\to\tau}\quad \Gtipa{N}{\sigma}}{\Gtipa{\app{M}{N}}{\tau}}{T-App}\]
+
+Los valores:
+
+\[ V ::= true \vert false \vert \abs{x}{\sigma}{M} \vert \underline{n} \]
+
+donde \underline{n} abrevia $succ^n(0)$.\\
+
+Las reglas de semántica:
+
+\[\deriv{M_1 \to M_1'}{\ifte{M_1}{M_2}{M_3}\to\ifte{M_1'}{M_2}{M_3}}{E-If}\]
+
+\[\deriv{}{\ifte{true}{M_2}{M_3} \to M_2}{E-IfTrue}\quad\quad \deriv{}{\ifte{false}{M_2}{M_3} \to M_3}{E-IfFalse}\]
+
+\[\deriv{M_1 \to M_1'}{succ(M_1) \to succ(M_1')}{E-Succ}\quad\quad \deriv{M_1 \to M_1'}{pred(M_1) \to pred(M_1')}{E-Pred}\]
+
+\[\deriv{}{pred(0) \to 0}{E-PredZero}\quad\quad \deriv{}{pred(succ(\underline{n}))\to \underline{n}}{E-PredSucc}\]
+
+\[\deriv{}{iszero(0) \to true}{E-IsZeroZero}\quad\quad \deriv{}{iszero(succ(\underline{n}))\to false}{E-IsZeroSucc}\]
+
+\[\deriv{M_1 \to M_1'}{iszero(M_1) \to iszero(M_1')}{E-IsZero}\]
+
+\[\deriv{M_1 \to M_1'}{\app{M_1}{M_2} \to \app{M_1'}{M_2}}{E-App1 o $\mu$}\quad\quad \deriv{M_2 \to M_2'}{\app{V_1}{M_2} \to \app{V_1}{M_2'}}{E-App2 o $\nu$}\]
+
+\[\deriv{}{\app{\abs{x}{\sigma}{M}}{V} \to \sust{M}{x\from V}}{E-AppAbs o $\beta$}\]
+
 \paragraph{Registros}
 
 Llamada $\lambda^{\dots r}$. Permite utilizar descriptores de campos de la pinta: $\{nombre: String, edad: Nat\}$.
