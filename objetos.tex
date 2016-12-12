@@ -213,3 +213,32 @@ Lo interesante de las referencias es que no son contravariantes ni covariantes, 
 Ejemplo de que no es covariante: si $\subt{Bool}{Int}$ entonces según la regla $\subt{Ref\ Bool}{Ref\ Int}$ pero el término $let\ x\ =\ Ref\ True\ in\ x\ :=\ 3$ tipa y falla.
 
 Ejemplo de que no es contravariante: si $\subt{Bool}{Int}$ entonces según la regla $\subt{Ref\ Int}{Ref\ Bool}$ pero el término $let\ x\ =\ Ref\ 3\ in\ (if\ !x\ then\ \dots else \dots)$ tipa y falla.
+
+\paragraph{Algoritmo de subtipado}
+
+Hasta ahora, las reglas de tipado \xbf{sin} subtipado eran dirigidas por sintaxis. Esto hace que sea inmediato implementar un algoritmo de chequeo de tipos a partir de ellas.
+
+Sin embargo, al agregar \xbf{Subsumption}, ya no son dirigidas por sintaxis. Un análisis rápido determina que el único lugar donde se precisa subtipar es al aplicar una función a un argumento. Esto sugiere la siguente modificación:
+
+\[\deriv{\Gtipa{M}{\sigma\to\tau}\quad \Gtipa{N}{\rho}\quad \subt{\rho}{\sigma}}{\Gtipa{\app{M}{N}}{\tau}}{T-App}\]
+
+Pero igual hay que ver como se implementa en el algoritmo de subtipado.
+
+Las reglas de subtipado no son dirigida por sintaxis, y el problema viene de las reglas \xtt{S-Refl} y \xtt{S-Trans}.
+
+Observando que se puede probar $\subt{\sigma}{\sigma}$ y transitividad, siempre que se tenga la reflexividad para los tipos escalares: $\subt{Nat}{Nat}$, $\subt{Bool}{Bool}$ y $\subt{Float}{Float}$, agregamos esas 3 reglas y no consideramos explicitamente a \xtt{S-Refl} y \xtt{S-Trans}.
+
+Luego, el algoritmo de chequeo de subtipos (obviando los axiomas de Nat, Bool, Float) nos queda:
+
+\begin{verbatim}
+subtype(S, T) =
+  if T == Top:
+    return true
+  elif S == S1->S2 and T == T1->T2:
+    return subtype(T1, S1) and subtype(S2, T2)
+  elif S=={kj : Sj, j in 1..m} and T =={li : Ti, i in 1..n}:
+    return {li, i in 1..n} subset {kj, j in 1..m} and
+            ForAll i Exists j kj = li and subtype(Sj,Ti)
+  else:
+    return false
+\end{verbatim}
