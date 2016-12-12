@@ -158,7 +158,7 @@ Para las funciones, tenemos la siguiente regla de subtipado:
 \[\deriv{\subt{\sigma'}{\sigma}\ \subt{\tau}{\tau'}}{\subt{\sigma\to\tau}{\sigma'\to\tau'}}{S-Func}\]
 
 Observar que el sentido de $<:$ se da ``vuelta'' para el tipo del argumento, pero no para el tipo del resultado.
-Entonces, decimos que el constructor de tipos de función es \xbf{contravariante} en su primer argumento y \xbf{variante} en el segundo.
+Entonces, decimos que el constructor de tipos de función es \xbf{contravariante} en su primer argumento y \xbf{covariante} en el segundo.
 
 Esto es así ya que si un contexto/programa $P$ espera una expresión $f$ de tipo $\sigma'\to\tau'$ puede recibir otra de tipo $\sigma\to\tau$ si se dan las condiciones indicadas:
 
@@ -199,6 +199,10 @@ Ahora, combinemos las 3 reglas en una sola (\xit{one rule to rule them all}):
 
 \paragraph{Subtipado de referencias}
 
-Lo interesante de las referencias es que no son contravariantes ni variantes, son \xbf{invariantes}. Es decir: solo podemos comparar referencias de tipos equivalentes:
+Lo interesante de las referencias es que no son contravariantes ni covariantes, son \xbf{invariantes}. Es decir: solo podemos comparar referencias de tipos equivalentes:
 
 \[\resol{\subt{\sigma}{\tau}\quad \subt{\tau}{\sigma}}{\subt{Ref\ \sigma}{Ref\ \tau}}\]
+
+Ejemplo de que no es covariante: si $\subt{Bool}{Int}$ entonces según la regla $\subt{Ref\ Bool}{Ref\ Int}$ pero el término $let\ x\ =\ Ref\ True\ in\ x\ :=\ 3$ tipa y falla.
+
+Ejemplo de que no es contravariante: si $\subt{Bool}{Int}$ entonces según la regla $\subt{Ref\ Int}{Ref\ Bool}$ pero el término $let\ x\ =\ Ref\ 3\ in\ (if\ !x\ then\ \dots else \dots)$ tipa y falla.

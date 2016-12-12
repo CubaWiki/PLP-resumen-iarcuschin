@@ -1,0 +1,41 @@
+\section{Finales tomados}
+
+Copio y pego los finales que están en cuba wiki. Trato de resolver los que tienen información suficiente.
+
+\subsection{07/03/2016 - Melgratti}
+
+1) Sea $f x = x (f x)$. Dar el resultado de evaluar $f (\backslash x \to 1:x)$. Que representa esta funcion?
+
+La función $f$ representa la función $fix$: una extensión de cálculo lambda que permite construir funciones recursivas.
+
+Entonces, $f (\backslash x \to 1:x)$ construye una lista infinita de 1s.
+
+2) Las reglas e-app1, e-app2, e-appAbs definen la regla de evaluacion utilizada por haskell?
+
+No. El mecanismo de reducción de haskell es \xit{Lazy}. Las reglas e-app1, e-app2, e-appAbs establecen que la aplicación \app{M}{N} recién se hace cuando $N$ es un valor. Eso impediría que cosas como \xtt{let f x = 42 in f (1/0)} funcionen.
+
+3) que pasa en el algoritmo de inferencia de if-then-else si eliminas la unificacion de los contextos?
+
+Lo mismo que pasaría en cualquier otra regla que tiene subexpresiones cuya inferencia da contextos distintos: puede pasar que una variable en una subexpresión se use como tipo $\sigma$ y en otra subexpresión como tipo $\tau$. Ejemplo: \xtt{if true then x+1 else x==false}
+
+4) indicar por que no seria correcto una regla de subtipado de registros (era bastante facil).
+
+5) Dado un programa en prolog ver si con consultas ground vs el mismo programa con una modificacion (cambiaba un hecho y ahora tenia un NOT) tenia soluciones distintas.
+
+6) Verdadero y Falso de resolucion
+
+7) Un seguimiento de smalltalk, bastante facil. Jugar un poco con self y super.
+
+\subsection{26/03/2016 - Melgratti}
+
+1) sea $f a b = (b:(-a))b$ . Que representa $fix f 1$ ?
+
+2) uno que te daba unos tipos y tenias q dar las reglas semanticas
+
+3) inferir el tipo de f g (f g) (o algo asi)
+
+4) Te daba un programa en prolog y tenias que hacer el arbol. El programa tenia un NOT
+
+5) Verdadero y Falso sobre resolucion (en particular skolemizacion)
+
+6) Un seguimiento de smalltalk
