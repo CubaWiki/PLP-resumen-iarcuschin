@@ -534,7 +534,7 @@ Dado que $(A_1 \land \dots \land A_n) \supset B \iff \lnot (A_1 \land \dots \lan
 
 \paragraph{Operador Cut}
 
-Es una anotación que permite poder el árbol SLD, y se encuentra presente por cuestiones de eficiencia.
+Es una anotación que permite poder el árbol SLD, y se encuentra presente por cuestiones de eficiencia. En prolog se escribe el símbolo \xtt{!}.
 
 \begin{itemize}
   \item Cuando se selecciona un cut, tiene éxito inmediatamente.
@@ -542,6 +542,32 @@ Es una anotación que permite poder el árbol SLD, y se encuentra presente por c
   \item En particular, todas las variables que estaban ligadas al momento de pasar por el cut, quedan ligadas por el resto de la ejecución del programa y no pueden cambiarse.
 \end{itemize}
 
-\paragraph{Negación por falla}
+\paragraph{Operador Not (negación por falla)}
 
-\todo{DESARROLLAR}
+Antes veamos algunas definiciones:
+
+\begin{itemize}
+  \item Decimos que un árbol SLD \xbf{falla finitamente} si es finito y no tiene ramas de éxito.
+  \item Dado un programa $P$, definimos el \xbf{conjunto de falla finita} de $P$ como \{$B$ | $B$ átomo cerrado ('ground') y existe un árbol SLD que falla finitamente con  $B$ como raiz \}
+\end{itemize}
+
+Entonces, la \xbf{negación por falla} se define como:
+
+\[\resol{B \text{ átomo cerrado}\quad B \text{ en conjunto de falla finita de } P}{\lnot B}\]
+
+El operador \xtt{not} nos permite utilizar la negación por falla y se define como:
+
+\begin{lstlisting}[language=Prolog]
+not(G) :- call(G), !, fail.
+not(G).
+\end{lstlisting}
+
+La clave está en combinar el operador \xtt{!} y \xtt{fail}. Una vez que el \xtt{Goal} tiene éxito, el cut nos prohibe de volver atras en el árbol SLD, y el \xtt{fail} hace que la solución actual falle. Como no hay más ramas que explorar, toda la consulta falla.
+
+Notar que es distinto a la negación lógica. Si la cláusulas no es cerrada, \xtt{not(G)} tiene éxito si no existe \xit{ninguna} valuación tal que \xtt{G} se satisface.
+
+Además, observar que el \xtt{not(G)} nunca instancia variables de \xtt{G}:
+\begin{itemize}
+  \item Si \xtt{G} tiene éxito, \xtt{fail} falla y descarta la sustitución.
+  \item Caso contrario, \xtt{not(G)} tiene éxito inmediatamente (sin afectar \xtt{G}).
+\end{itemize}
