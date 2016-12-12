@@ -281,11 +281,17 @@ Y las reglas de semántica:
 
 Claramente queremos hacer algo como
 
-\[pred \eqdef \lambda n : Nat. if iszero(n) then 0 else search (\lambda x: Nat. succ(y) == x)\]
+\[pred \eqdef \lambda n : Nat. \ifte{iszero(n)}{0}{search (\lambda x: Nat. succ(y) == x)}\]
 
-donde usamos el search para buscar el Nat anterior a n. El único problema es definir el predicado de igualdad entre Nat (==), ya que necesitaríamos usar pred, que es la que estamos definiendo.
+donde usamos el search para buscar el Nat anterior a n. Nos falta definir el predicado de igualdad entre Nat (==):
 
-\todo{REVISAR}
+\[\deriv{\Gtipa{M}{Nat}\quad \Gtipa{N}{Nat}}{\Gtipa{M == N}{Bool}}{T-Igual}\]
+
+\[\deriv{M \to M'}{M == N \to M' == N}{E-Igual1}\quad\quad \deriv{N \to N'}{V == N \to V == N'}{E-Igual2}\]
+
+\[\deriv{}{0 == succ(V) \to false}{E-IgualZeroSucc}\quad\quad \deriv{}{succ(V) == 0 \to false}{E-IgualSuccZero}\]
+
+\[\deriv{}{0 == 0 \to true}{E-IgualZeroZero}\quad\quad \deriv{}{succ(V_1) == succ(V_2) \to V_1 == V_2}{E-IgualSuccSucc}\]
 
 \subsection*{Ejercicio 8} La extensión básica de listas consiste en:
 
