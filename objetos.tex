@@ -56,7 +56,7 @@ En los lenguajes de clasificación orientados a objetos, por cada entidad del pr
 
 Su esencias es saber crear instancias y definir el comportamiento de ellas.
 
-En estos casos el tipado estático es una complicación, y el tipado dinámico un feature. Si el lenguaje es estaticamente tipado, es un problema pensar el protocolo a implementar por la clase de antemano. Además, el \xit{Method LookUp} se complica, mientras que con tipado dinámico se vuelve más flexible y permite varias optimizaciones.
+En estos casos el tipado estático es una complicación, y el tipado dinámico un feature. Si el lenguaje es estaticamente tipado, es un problema pensar el protocolo a implementar por la clase de antemano. Además, el \xbf{Method LookUp} (búsqueda y llamado del código a ejecutar) se complica, mientras que con tipado dinámico se vuelve más flexible y permite varias optimizaciones.
 
 Notar que como todo es un objeto, por lo tanto las clases también lo son. Pero los objetos solo existen cuando su clase existe. Para eso existe la clase \xtt{ProtoObject}, que no tiene clase padre, y la clase \xtt{MetaClass}, que es instancia de si misma.
 
@@ -79,7 +79,7 @@ Es la forma en la que un objeto se refiere a si mismo. Es una pseudo-variable:
 
 \paragraph{Super}
 
-\todo{COMPLETAR}
+Tiene exactamente las mismas propiedaes que \xtt{self}. La única diferencia es que el \xit{Method lookup} se realiza en la clase padre.
 
 \paragraph{Tipos de mensajes}
 

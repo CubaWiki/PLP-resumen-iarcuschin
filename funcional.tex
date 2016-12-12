@@ -24,8 +24,10 @@
       \item Atómicas: llamadas también formas normales. Ejemplo: \xtt{2, False, (3, True)}.
       \item Compuestas: se \xit{arman} combinando subexpresiones. Ejemplo: \xtt{(1+1), (2==1)}.
     \end{itemize}
+    Y pueden estar bien o mal formadas, depdendiendo de las reglas sintácticas y de las reglas de asignación de tipos.
   \item \xbf{Funciones:} son valores especiales que representan ``transformaciones de datos''. Notese que al ser valores, pueden ser argumento de otras funciones, resultado, almacenarse en estructuras de datos, ser estructuras de datos, etc. Llamamos funciones de \xbf{alto orden} a las funciones que trabajan con funciones.
   \item \xbf{Transparencia referencial:} el valor de una expresión depende sólo de los elementos que la constituyen. Esto implica, por ejemplo, que los detalles de ejecución no influencían el comportamiento del programa. Además, existe la posibilidad de demostrar propiedades usando las propiedades de las subexpresiones y métodos de deducción lógica.
+  \item \xbf{Ecuaciones orientadas:} tienen la forma $e_1 = e_2$, donde $e_1$ y $e_2$ expresan el mismo valor. Decimos que están orientadas porque se puede utilizar $e_2$ para reemplazar una aparición de $e_1$ en alguna expresión (pero no al revés).
   \item \xbf{Programa funcional:} es un conjunto de ecuaciones que definen una o más funciones. Para usarlo, resolvemos la reducción de la aplicación de una función a sus datos (reducción de una expresión).
 \end{itemize}
 
@@ -36,11 +38,18 @@ Decimos que un \xbf{Lenguaje funcional puro} es aquel que es un ``lenguaje de ex
 Toda expresión válida denota un valor. Además, todo valor pertenece a un conjunto, y los tipos denotan conjuntos.
 Es decir, toda expresión debería tener un tipo para ser válida.
 
+\paragraph{Asignación de tipos:} se puede realizar de dos formas:
+
+\begin{itemize}
+  \item De manera explícita, con la sintaxis \xtt{e :: A}, que dice que la expresión \xtt{e} tiene tipo \xtt{A}.
+  \item De manera implícita. Se infiere por el contexto en el cual se usa la expresión.
+\end{itemize}
+
 \paragraph{Inferencia de tipos:} dada una expresión \xtt{e}, determinar si tiene tipo o no según las reglas, y cuál es ese tipo.
 
 \paragraph{Chequeo de tipos:} dada una expresión \xtt{e} y un tipo \xtt{A}, determinar si \xtt{e} tipa \xtt{A} (\xtt{e :: A}) según las reglas, o no.
 
-\paragraph{Sistema de tipado fuerte (string typing):} acepta una expresión si, y solo si, ésta tiene tipo según las reglas.
+\paragraph{Sistema de tipado fuerte (tipado fuerte/strong typing):} acepta una expresión si, y solo si, ésta tiene tipo según las reglas.
 
 \paragraph{Sistema de Hindley-Milner} es un sistema de tipos que propone:
 
@@ -59,6 +68,14 @@ Es decir, toda expresión debería tener un tipo para ser válida.
     \end{itemize}
   \item \xbf{Polimorfismo:} permite que una expresión tenga más de un sólo tipo. El polimorfismo paramétrico soluciona esto usando \xbf{variables de tipos}, ejemplo: \xtt{id :: a -> a}.
 \end{itemize}
+
+\subsubsection{Tipos algebráicos} Es un conjunto de valores junto con las operaciones que se les pueden realizar.
+
+\subsubsection{Tipo abstracto (TAD)}
+
+\subsubsection{Pattern matching} es un mecanismo para acceder a los parametros con los que fue construido un Tipo Algebráico. \xbf{Pattern} es una expresión utilizando constructores y variables sin repetir. \xbf{Matching} es la operación que dice si una expresión es de la forma de un patrón.
+
+\subsubsection{Tipos algebráicos recursivos} representan conjuntos inductivos, al menos un constructor de tener al menos un parámetro de tipo si mismo.
 
 \subsection{Currificación}
 
@@ -95,10 +112,6 @@ O sea, que hay una correspondencia entre los tipos \xtt{(a,b) -> c} y \xtt{a -> 
 \end{itemize}
 
 \subsubsection{Esquemas de recursion}
-
-\subsubsection{Tipos algebraicos}
-
-\subsubsection{Pattern matching}
 
 \subsubsection{Monadas}
 
