@@ -172,12 +172,11 @@ Esto es así ya que si un contexto/programa $P$ espera una expresión $f$ de tip
 
 \begin{itemize}
   \item Toda aplicación de $f$ está aplicada a argumentos de tipo $\sigma'$
-  \item Los mismos se coercionan a argumentos del tipo $\sigma$. Es decir que $\sigma$ es más específico que $\sigma'$. Que es lo mismo que decir que $\sigma'$ es más general que $\sigma$.
+  \item Los mismos se coercionan a argumentos del tipo $\sigma$. Es decir que $\sigma'$ es más específico que $\sigma$. Que es lo mismo que decir que $\sigma$ es más general que $\sigma'$. En un ejemplo concreto: si esperamos una función $Alumno \to Bool$, pueden pasarnos $Persona \to Bool$, pero no $AlumnoDC \to Bool$, porque podríamos usar la función con alumnos que no son del DC.
   \item Luego se aplica la función, cuyo tpo real es $\sigma\to\tau$.
-  \item Finalmente se coerciona el resultado a $\tau'$, el tipo del resultado que $P$ está esperando. Esto quiere decir que $\tau'$ es más específico que $\tau$. Que es lo mismo que decir que $\tau$ es más general que $\tau'$.
+  \item Finalmente se coerciona el resultado a $\tau'$, el tipo del resultado que $P$ está esperando. Esto quiere decir que $\tau$ es más específico que $\tau'$. Que es lo mismo que decir que $\tau'$ es más general que $\tau$. En un ejemplo concreto: si esperamos una función $Nat \to Alumno$, pueden pasarnos $Nat \to AlumnoDC$, pero no $Nat \to Persona$, porque esa función podría devolver una persona que no es alumno.
+  \item Luego se aplica la función, cuyo tpo real es $\sigma\to\tau$.
 \end{itemize}
-
-\todo{Revisar lo de más específico y más general}
 
 \paragraph{Subtipado de registros}
 
