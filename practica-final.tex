@@ -477,5 +477,219 @@ Seguimiento de \xtt{(c2 new) m3.}
 
 \subsection*{Ejercicio 18}
 
-1. Ref T , 3. Sink T , 5. Ref Sink T , 7. Source Source T ,
-2. Ref Ref T , 4. Source T , 6. Source Ref T , 8. Source Sink T .
+\todo{Ni idea cuales son los tipos Source y Sink}
+
+\subsection*{Ejercicio 19}
+
+Probar que si $M \toto U$ y $M \toto V$ con $U$ una forma normal, entonces $V \toto U$.
+
+\begin{proof}
+  Recordemos que $\toto$ es la clausura reflexiva, transitiva de $\to$. Es decir, la menor relación tal que:
+  \begin{enumerate}
+    \item Si $M\to M'$, entonces $M\toto M'$.
+    \item $M\toto M$, para todo $M$.
+    \item Si $M \toto M'$ y $M' \toto M''$, entonces $M \toto M''$.
+  \end{enumerate}
+
+  Si $V = U$, es trivialmente cierto (por la segunda propiedad). Veamos el caso en que $V \neq U$.
+
+  Recordemos que cualquier término $N$ sólo puede reducir a una forma normal: esto es así ya que el proceso de reducción en un paso es determinístico, y la definición de forma normal es una expresión que no se puede seguir reduciendo.
+
+  Luego, sabemos que $M \toto V$. Como $V \neq U$, y $M$ sólo puede reducir a una forma normal ($U$), entonces $V$ no es forma normal.
+
+  Entonces, existe $W$ forma normal tal que $V \toto W$.
+
+  Ahora bien, como $M \toto V$, y $V \toto W$, por la primera propiedad, $M \toto W$.
+
+  Pero $W$ es forma normal, y $M \toto W$, con lo que $W = U$, y $V \toto U$, que era lo que queríamos ver.
+\end{proof}
+
+\subsection*{Ejercicio 20}
+
+\todo{Ni idea cuales son los tipos Source y Sink}
+
+\subsection*{Ejercicio 21}
+
+\paragraph{1.} No vale en ninguno de los dos sentidos. Uno de es una referencía y el otro una tupla.
+
+\paragraph{2.} El único tipo que se me ocurre es $Top$, ya que vale \subt{Ref\ Top}{Top}, aunque no vale \subt{Top}{Ref\ Top}.
+
+\subsection*{Ejercicio 22}
+
+\todo{TODO}
+
+\subsection*{Ejercicio 23}
+
+\todo{TODO}
+
+\subsection*{Ejercicio 24}
+
+\paragraph{1.} Tenemos las siguientes fórmulas:
+
+\[1. \forall X. b(X) \supset \forall Y. \lnot a(Y,Y) \supset a(X,Y)\]
+\[2. \forall X. b(X) \supset \forall Y. a(Y,Y) \supset \lnot a(X,Y)\]
+
+\paragraph{2.} Queremos ver que $\lnot \exists X. b(X)$, por lo que lo negamos y tratamos de demostrar que la negación es insatisfacible:
+
+\[3. \exists X. b(X)\]
+
+Quitamos implicaciones:
+
+\[1. \forall X. \lnot b(X) \lor \forall Y. a(Y,Y) \lor a(X,Y)\]
+\[2. \forall X. \lnot b(X) \lor \forall Y. \lnot a(Y,Y) \lor \lnot a(X,Y)\]
+\[3. \exists X. b(X)\]
+
+Pasamos a Forma normal negada:
+
+\[1. \forall X. \lnot b(X) \lor \forall Y. a(Y,Y) \lor a(X,Y)\]
+\[2. \forall X. \lnot b(X) \lor \forall Y. \lnot a(Y,Y) \lor \lnot a(X,Y)\]
+\[3. \exists X. b(X)\]
+
+Pasamos a Forma prenexa:
+
+\[1. \forall X. \forall Y. \lnot b(X) \lor a(Y,Y) \lor a(X,Y)\]
+\[2. \forall X. \forall Y. \lnot b(X) \lor \lnot a(Y,Y) \lor \lnot a(X,Y)\]
+\[3. \exists X. b(X)\]
+
+Pasamos a Forma de Skolem:
+
+\[1. \forall X. \forall Y. \lnot b(X) \lor a(Y,Y) \lor a(X,Y)\]
+\[2. \forall X. \forall Y. \lnot b(X) \lor \lnot a(Y,Y) \lor \lnot a(X,Y)\]
+\[3. b(c)\]
+
+Y ya están en FNC porque sólo hay $\lor$.
+
+En Forma clausal:
+
+\[1. \{\lnot b(X), a(Y,Y), a(X,Y)\}\]
+\[2. \{\lnot b(X), \lnot a(Y,Y), \lnot a(X,Y)\}\]
+\[3. \{b(c)\}\]
+
+Hacemos la resolución:
+
+\begin{itemize}
+  \item 4. $\{a(Y,Y), a(c,Y)\}$, usando 3 y 1, con $s_1=\{X \from c\}$
+  \item 5. $\{\lnot a(Y,Y), \lnot a(c,Y)\}$, usando 2 y 1, con $s_2=\{X \from c\}$
+  \item 6. Acá vamos a usar resolución binaria para mostrar que 4 y 5 son insatisfacibles.
+
+  $\{a(c,c)\}$ factorizando 4, con $s_3=\{Y \from c\}$
+  \item 7. $\{\lnot a(c,c)\}$ factorizando 5, con $s_4=\{Y \from c\}$
+  \item 8. $\square$, usando 6 y 7.
+\end{itemize}
+
+\subsection*{Ejercicio 25}
+
+\paragraph{a.}
+
+Analizemos que pasa con cada predicado cuando se instancian o no las variables. Para \xtt{inorder1}:
+
+\begin{itemize}
+  \item Si tanto el árbol como la lista están instanciadas: verifica si la lista corresponde al recorrido inorder del árbol.
+  \item Si sólo el árbol está instanciado: calcula su recorrido inorder, y funciona ya que cuando llegamos al \xtt{append}, \xtt{LI} y \xtt{LR} ya están instanciadas.
+  \item Si ninguno está instanciado: genera todos los pares (Árbol, Recorrido inorder), pero expande siempre la rama derecha, debido a que el backtracking nunca llega a \xtt{inorder1(I,LI)}.
+  \item Si sólo la lista está instanciada: puede llegar a generar algún el árbol que tiene esa lista como su recorrido inorder, pero después se cuelga buscando más soluciones. De vuelta, el backtracking siempre lo hace en \xtt{inorder1(D,LD)}.
+\end{itemize}
+
+Para \xtt{inorder2}:
+
+\begin{itemize}
+  \item Si tanto el árbol como la lista están instanciadas: verifica si la lista corresponde al recorrido inorder del árbol.
+  \item Si sólo el árbol está instanciado: calcula su recorrido inorder, y se cuelga buscando más soluciones.
+  \item Si ninguno está instanciado: idem \xtt{inorder1}.
+  \item Si sólo la lista está instanciada: genera cada árbol que tiene esa lista como su recorrido inorder.
+\end{itemize}
+
+\paragraph{b.}
+
+\todo{fiaca}
+
+\subsection*{Ejercicio 26}
+
+Seguimiento del código:
+
+\begin{verbatim}
+|cuentaA cuentaB|
+cuentaA := CuentaBancaria new.
+cuentaB := (CuentaVip new: 50) depositar: 40.
+cuentaB transferir: 70 a: cuentaA.
+\end{verbatim}
+
+Separados por lineas de código con la barra horizontal:
+
+\begin{table}
+\centering
+\resizebox{0.8\textwidth}{!}{%
+\begin{tabular}{| c | c | c |}
+  \hline
+  receptor & mensaje & resultado \\ \hline
+  CuentaBancaria & new (de CuentaBancaria) & unaCuenta \\
+  CuentaBancaria & new (de Object) & unaCuenta \\
+  unaCuenta & inicializar & unaCuenta \\ \hline
+  CuentaVip & new (de CuentaVip) & unaCuentaVip \\
+  CuentaVip & new (de CuentaBancaria) & unaCuentaVip \\
+  CuentaVip & new (de Object) & unaCuentaVip \\
+  unaCuentaVip & inicializar & unaCuentaVip \\
+  unaCuentaVip & fijarTope & unaCuentaVip \\
+  unaCuentaVip & depositar (de CuentaVip) & unaCuentaVip \\
+  unaCuentaVip & depositar (de CuentaBancaria) & unaCuentaVip \\
+  balance (0) & + & 40 \\ \hline
+  cuentaB & transferir: a: (de CuentaVip) & cuentaB \\
+  cuentaB & transferir: a: (de CuentaBancaria) & cuentaB \\
+  cuentaB & puedeExtraer (de CuentaVip) & True \\
+  balance (40) & + & 90 \\
+  90 & $\geq$ & True \\
+  True & ifTrue: & \_ \\
+  cuentaB & extraer & cuentaB \\
+  cuentaB & puedeExtraer (de CuentaVip) & True \\
+  balance (40) & + & 90 \\
+  90 & $\geq$ & True \\
+  True & ifTrue: & \_ \\
+  balance (40) & - & -30 \\
+  cuentaA & depositar & cuentaA \\
+  balance (0) & + & 70 \\
+  \hline
+\end{tabular}%
+}
+\end{table}
+
+\subsection*{Ejercicio 27}
+
+\paragraph{1.} Probar que si \Gtipa{M}{\sigma} es derivable y $\Gamma \cap \Gamma'$ contiene a todas las variables libres de $M$, entonces $\Gamma' \rhd M : \sigma$.
+
+\begin{proof}
+Como \Gtipa{M}{\sigma} es derivable, significa que $M$ es bien formado y tiene tipo $\sigma$. Además, \Gtipa{M}{\sigma} si las variables libres de $M$ tienen el tipo correcto en $\Gamma$.
+
+Luego, como sabemos que $\Gamma \cap \Gamma'$ contiene a todas las variables libres de $M$, significa que las mismas se encuentran también en $\Gamma'$ con el mismo tipo. Entonces, $\Gamma' \rhd M : \sigma$.
+\end{proof}
+
+\paragraph{2.} (Weakening) Si \Gtipa{M}{\sigma} es derivable y $x \notin dom(\Gamma)$, entonces $\Gamma \cup \{x:\tau\} \rhd M : \sigma$ es derivable.
+
+\begin{proof}
+Igual que antes, como \Gtipa{M}{\sigma}, las variables libres de $M$ tienen el tipo correcto en $\Gamma$. Y sabemos que como $x \notin dom(\Gamma)$, entonces $x$ no es una variable libre de $M$, por lo que no influencia en su tipado. Luego, $\Gamma \cup \{x:\tau\} \rhd M : \sigma$.
+\end{proof}
+
+\paragraph{3.} (Strengthening) Si $\Gamma \cup \Gamma' \rhd M : \sigma$ es derivable y $FV(M) \subseteq Dom(\Gamma)$, entonces \Gtipa{M}{\sigma} es derivable. Al unir contextos siempre se asume que tienen dominios disjuntos.
+
+\begin{proof}
+Con la última aclaración del enunciado es medio trivial. Si los dominios de $\Gamma$ y $\Gamma'$ son disjuntos ($\Gamma \cap \Gamma' = \emptyset$), entonces cada variable libre de $M$ está en $\Gamma$, o bien está en $\Gamma'$.
+
+Nos dicen que $FV(M) \subseteq Dom(\Gamma)$, por lo que sabemos que todas las variables libres de $M$ están en $\Gamma$, y por lo tanto no están en $\Gamma'$.
+
+Entonces, nos alcanza con usar $\Gamma$ para tipar $M$ (\Gtipa{M}{\sigma}).
+\end{proof}
+
+\subsection*{Ejercicio 28}
+
+Probar la propiedad de Unicidad: si $\Gamma \rhd M : \sigma$ y $\Gamma \rhd M : \tau$ son derivables, entonces $\sigma = \tau$.
+
+\todo{Probar usando inducción estructural como pide el enunciado}
+
+\subsection*{Ejercicio 29}
+
+Probar el Lema se sustitución para subtipado: si $\Gamma \cup \{x:\sigma\} \rhd M : \tau$ y \Gtipa{N}{\sigma} entonces \Gtipa{\sust{M}{x\from N}}{\tau}
+
+\todo{TODO}
+
+\subsection*{Ejercicio 30}
+
+\todo{TODO}

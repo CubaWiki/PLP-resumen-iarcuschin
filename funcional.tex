@@ -262,7 +262,6 @@ En resumen:
   \item \xbf{Preservación}: si $\Gamma \rhd M : \sigma$ y $M \to N$, entonces $\Gamma \rhd N : \sigma$. Es decir que la evaluación preserva tipos.
 \end{itemize}
 
-
 Ahora presentamos algunas nociones.
 
 Un \xit{contexto de tipado} $\Gamma$ es un conjunto de pares $\{x_1:\sigma_1,\dots,x_n:\sigma_n\}$ donde cada $x_i$ es distinto. Los $x_i$ representan las variables y los $\sigma_i$ sus tipo asignado.
@@ -329,7 +328,7 @@ El \xbf{Juicio de evaluación en muchos pasos} $\toto$ es la clausura reflexiva,
 \paragraph{Propiedades de evaluación en muchos pasos:}
 
 \begin{itemize}
-  \item \xbf{Unicidad de formas normales}: si $M \toto _U$ y $M \toto V$, entonces $U=V$.
+  \item \xbf{Unicidad de formas normales}: si $M \toto U$ y $M \toto V$, entonces $U=V$.
   \item \xbf{Terminación}: para todo $M$ existe una forma normal $N$ tal que $M \toto N$.
   \item Si un término está bien tipado, y termina, entonces evalúa a un valor.
 \end{itemize}
