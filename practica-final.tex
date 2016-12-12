@@ -343,7 +343,40 @@ donde,
 
 \subsection*{Ejercicio 12}
 
-\todo{TODO}
+Se agrega el término $map_{\sigma,\tau}$, con su regla de inferencia:
+
+\[\w{map} = \emptyset \rhd map_{a,b} : (a\to b) \to [a] \to [b]\]
+
+siendo $a$ y $b$ variables de tipo frescas.
+ %Primero, vamos a necesitar la regla de tipado de map:
+% \[\deriv{}{\Gtipa{map}{(\sigma\to \tau) \to [\sigma] \to [\tau]}}{T-Map}\]
+
+Nos piden tipar la expresión \xtt{map map}. Dado que es una aplicación, tenemos que:
+
+\[\w{\app{map_1}{map_2}} \eqdef \emptyset \rhd \dots \]
+
+donde
+\begin{itemize}
+  \item $\w{map_1} = \emptyset \rhd map_{a,b} : (a\to b) \to [a] \to [b] = \tau$
+  \item $\w{map_2} = \emptyset \rhd map_{c,d} : (c\to d) \to [c] \to [d] = \rho$
+  \item $t$ variable fresca
+  \item Entonces, $S = MGU\{\tau \uni \rho\to t\} \cup \{\sigma_1 \uni \sigma_2 \vert x:\sigma_1 \in \Gamma_1, x:\sigma_2 \in \Gamma_2\}$ equivale a $S = MGU \{(a\to b) \to ([a] \to [b]) \uni ((c\to d) \to ([c] \to [d])) \to t \}$
+\end{itemize}
+
+Hacemos paso a paso la unificación:
+
+\begin{enumerate}
+  \item Descomposición: $\{(a\to b) \uni (c\to d) \to ([c] \to [d]),  [a] \to [b] \uni t \}$.
+  \item Eliminación de variable: $\{(a\to b) \uni (c\to d) \to ([c] \to [d])\}$ con $S_1 = \{t/([a] \to [b])\}$
+  \item Descomposición $\{a \uni c\to d, b \uni [c] \to [d]\}$
+  \item Eliminación de variables: $\emptyset$ con $S_2 = \{a/(c\to d), b / ([c] \to [d])\}$.
+\end{enumerate}
+
+Entonces, $S = S_2 \circ S_1$, y $St = [c\to d] \to [[c] \to [d]]$.
+
+Y nos queda:
+
+\[\w{\app{map}{map}} \eqdef \emptyset \rhd \app{map_{c\to d, [c] \to [d]}}{map_{c,d}} : [c\to d] \to [[c] \to [d]]\]
 
 \subsection*{Ejercicio 13}
 
