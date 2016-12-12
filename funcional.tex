@@ -676,7 +676,9 @@ Las reglas de este algoritmo son:
 
 \subsubsection{Algoritmo de inferencia}
 
-El algoritmo que vamos a presentar se basa en definir \w{U} por recursión sobre la estructura de U, y utiliza el algoritmo de unificación para ir sintetizando la información de las subexpresiones de $U$.
+El algoritmo que vamos a presentar se basa en definir \w{U} por recursión sobre la estructura de $U$, y utiliza el algoritmo de unificación para ir sintetizando la información de las subexpresiones de $U$.
+
+Presentamos las reglas para los casos cómunes:
 
 \paragraph{Caso constantes y variables}
 
@@ -689,33 +691,76 @@ El algoritmo que vamos a presentar se basa en definir \w{U} por recursión sobre
 
 \paragraph{Caso succ}
 
+\[\w{succ(U)} \eqdef S\Gamma \rhd S\ succ(M) : Nat\]
+
+donde
 \begin{itemize}
-  \item Sea $\w{U} = \Gamma \rhd M : \tau$
-  \item Sea $S = MGU\{\tau \uni Nat\}$
-  \item Entonces
-  \[\w{succ(U)} \eqdef S\Gamma \rhd S\ succ(M) : Nat\]
+  \item $\w{U} = \Gamma \rhd M : \tau$
+  \item $S = MGU\{\tau \uni Nat\}$
 \end{itemize}
 
 El caso de $pred$ es similar.
 
 \paragraph{Caso iszero}
 
+\[\w{iszero(U)} \eqdef S\Gamma \rhd S\ iszero(M) : Bool\]
+
+donde
 \begin{itemize}
-  \item Sea $\w{U} = \Gamma \rhd M : \tau$
-  \item Sea $S = MGU\{\tau \uni Nat\}$
-  \item Entonces
-  \[\w{iszero(U)} \eqdef S\Gamma \rhd S\ iszero(M) : Bool\]
+  \item $\w{U} = \Gamma \rhd M : \tau$
+  \item $S = MGU\{\tau \uni Nat\}$
 \end{itemize}
 
 \paragraph{Caso ifThenElse}
 
+\[\w{\ifte{U}{V}{W}} \eqdef S\Gamma_1 \cup S\Gamma_2 \cup S\Gamma_3 \rhd S(\ifte{M}{P}{Q}) : S\sigma\]
+
+donde
 \begin{itemize}
-  \item Sea
-    \begin{itemize}
-      \item $\w{U} = \Gamma_1 \rhd M : \rho$
-      \item $\w{V} = \Gamma_2 \rhd P : \sigma$
-      \item $\w{W} = \Gamma_3 \rhd Q : \tau$
-    \end{itemize}
+  \item $\w{U} = \Gamma_1 \rhd M : \rho$
+  \item $\w{V} = \Gamma_2 \rhd P : \sigma$
+  \item $\w{W} = \Gamma_3 \rhd Q : \tau$
+  \item $S = MGU\{\sigma \uni \tau, \rho \uni Bool\} \cup \{\sigma_1 \uni \sigma_2 \vert x:\sigma_1 \in \Gamma_i, x:\sigma_2 \in \Gamma_j, i\neq j\}$
 \end{itemize}
 
-\todo{TERMINAR DE ESCRIBIR LOS CASOS DEL ALGORITMO}
+\paragraph{Caso abs}
+
+\[\w{\lambda x.U} \eqdef \Gamma' \rhd \abs{x}{\tau'}{M} : \tau'\to\rho\]
+
+donde
+\begin{itemize}
+  \item $\w{U} = \Gtipa{M}{\rho}$
+  \item $\tau' = \begin{cases}
+          \alpha & \text{ si } x:\alpha \in \Gamma \\
+          s \text{ variable fresca} &  \text{ en otro caso}
+       \end{cases}$
+  \item $\Gamma' = \Gamma \ominus \{x\}$
+\end{itemize}
+
+\paragraph{Caso app}
+
+\[\w{\app{U}{V}} \eqdef S\Gamma_1 \cup S\Gamma_2 \rhd S(\app{M}{N}) : St \]
+
+donde
+\begin{itemize}
+  \item $\w{U} = \Gamma_1 \rhd M : \tau$
+  \item $\w{V} = \Gamma_2 \rhd N : \rho$
+  \item $t$ variable fresca
+  \item $S = MGU\{\tau \uni \rho\to t\} \cup \{\sigma_1 \uni \sigma_2 \vert x:\sigma_1 \in \Gamma_1, x:\sigma_2 \in \Gamma_2\}$
+\end{itemize}
+
+\paragraph{Conclusiones de las reglas de inferencia}
+
+\begin{itemize}
+  \item Los llamados recursivos devuelven un contexto, un término anotado y un tipo. No podemos asumir nada sobre ellos.
+  \item Cuando la regla tiene tipos iguales, unificar.
+  \item Si hay contextos repetidos en las premisas, unificarlos.
+  \item Cuando la regla liga variables:
+  \begin{itemize}
+    \item Obtener su tipo del $\Gamma$ obtenido recursivamente.
+    \item Si no figuran: variable fresca.
+    \item Sacarlas del $\Gamma$ del resultado (y del que se vaya a unificar), ya que ya no son variables libres.
+  \end{itemize}
+  \item Decorar los términos según corresponda.
+  \item Si la regla tiene restricciones adicionales, se incorporan como posibles casos de falla.
+\end{itemize}
