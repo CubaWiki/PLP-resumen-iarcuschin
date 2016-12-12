@@ -263,25 +263,19 @@ Las expresiones que nos plantea el enunciado son:
 
 Y nos dicen que los valores no se modifican.
 
-Entonces, como nos dicen que las expresiones $M_1, M_2, \dots, M_n$ podrían dar error, agregamos a los tipos:
+Tampoco vamos a modificar los tipos, aunque si agregamos 2 reglas de tipado:
 
-\[\sigma ::= \dots \vert Try_\sigma \vert Error_\sigma\]
+\[\deriv{}{\Gtipa{raise_\sigma\ M}{\sigma}}{T-Raise}\]
 
-Las nuevas reglas de tipado son:
-
-\[\deriv{\Gamma \rhd M : Nat}{\Gamma \rhd raise_\sigma M : Error_\sigma}{T-Raise}\]
-
-\[\deriv{\Gamma \rhd N : Nat \to \rho\quad \Gamma \rhd M_i : Try_{\sigma_i}\text{, con $1 \leq i \leq n$}}{\Gamma \rhd try\ M_1, M_2, \dots, M_n\ with\ N : \sigma_n}{T-Raise}\]
+\[\deriv{\Gamma \rhd N : Nat \to \sigma_n\quad \Gamma \rhd M_i : \sigma_i\text{, con $1 \leq i \leq n$}}{\Gamma \rhd try\ M_1, M_2, \dots, M_n\ with\ N : \sigma_n}{T-Try}\]
 
 Y las reglas de semántica:
 
 \[\deriv{}{try\ V_1, \dots, V_n\ with\ N \to V_n}{E-NoError}\]
 
-\[\deriv{M_i \to M_i'}{try\ V_1, \dots, M_i ,\dots, M_n\ with\ N \to try\ V_1, \dots, M_i' ,\dots, M_n\ with\ N}{E-UnPaso}\]
+\[\deriv{M_i \to M_i'}{try\ V_1, \dots, V_{i-1}, M_i ,\dots, M_n\ with\ N \to try\ V_1, \dots, V_{i-1}, M_i' ,\dots, M_n\ with\ N}{E-UnPaso}\]
 
-\[\deriv{M_i \to raise_\sigma T}{try\ V_1, \dots, M_i ,\dots, M_n\ with\ N \to N\ T}{E-Error}\]
-
-\todo{REVISAR}
+\[\deriv{}{try\ V_1, \dots, V_{i-1}, raise_\sigma T , M_{i+1},\dots, M_n\ with\ N \to N\ T}{E-Error}\]
 
 \subsection*{Ejercicio 7}
 
