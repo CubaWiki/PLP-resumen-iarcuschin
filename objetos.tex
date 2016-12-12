@@ -112,7 +112,15 @@ Se necesita más delegación cuando:
 
 \paragraph{Bloque, Closure y Full Closure}
 
-Los bloques son simplemente un pedazo de código. Closure agrega \xit{Binding Lexicográfico} de variables a los bloques. Full Closure agrega además un control apropiado de flujo.
+Veamos las diferencias entre los 3:
+
+\begin{itemize}
+  \item Un bloque es simplemente un pedazo de código (o función) cerrado (sin variables libres).
+  \item Closure agrega \xit{Binding Lexicográfico} de variables a los bloques. De esta forma, las variables libres del Closure se ligan con las variables que tenían el mismo nombre cuando fue creado.
+  \item Full Closure agrega además un control apropiado de flujo. Es decir, si por ejemplo hacemos un return dentro de un full closure, es como si estuvieramos haciendo un return en el scope en el que fue creado.
+\end{itemize}
+
+\todo{Revisar, no está muy claro}
 
 \subsection{Sistema de tipos}
 
