@@ -8,7 +8,7 @@
   \item Los estados intermedios (salidas de las funciones) son pasados directamente a otras funciones como argumentos.
   \item Repetición basada en recursión.
   \item Expresiones tipadas.
-  \item Tine un \xbf{alto nivel de abstracción}: tiende a ser una \xit{especificación ejecutable}.
+  \item Tiene un \xbf{alto nivel de abstracción}: tiende a ser una \xit{especificación ejecutable}.
   \item Es \xbf{declarativo}: la máquina se encarga de buscar el \xit{cómo} y nosotros elegimos el \xit{qué}.
   \item La matemática y razonamiento algebraico tienden a ser más elegantes.
   \item En el pasado: ejecución más lenta. Hoy en día no está tan claro que sea así.
@@ -17,16 +17,16 @@
 \subsection{Fundamentos}
 
 \begin{itemize}
-  \item Se enfoca en la transformación de la información, y no tanto en la interación con el medio.
+  \item Se enfoca en la transformación de la información, y no tanto en la interacción con el medio.
   \item \xbf{Valores:} entidades (matemáticas) abstractas con ciertas propiedades.
   \item \xbf{Expresiones:} cadenas de símbolos utilizadas para denotar valores. Se dividen en:
     \begin{itemize}
       \item Atómicas: llamadas también formas normales. Ejemplo: \xtt{2, False, (3, True)}.
       \item Compuestas: se \xit{arman} combinando subexpresiones. Ejemplo: \xtt{(1+1), (2==1)}.
     \end{itemize}
-    Y pueden estar bien o mal formadas, depdendiendo de las reglas sintácticas y de las reglas de asignación de tipos.
-  \item \xbf{Funciones:} son valores especiales que representan ``transformaciones de datos''. Notese que al ser valores, pueden ser argumento de otras funciones, resultado, almacenarse en estructuras de datos, ser estructuras de datos, etc. Llamamos funciones de \xbf{alto orden} a las funciones que trabajan con funciones.
-  \item \xbf{Transparencia referencial:} el valor de una expresión depende sólo de los elementos que la constituyen. Esto implica, por ejemplo, que los detalles de ejecución no influencían el comportamiento del programa. Además, existe la posibilidad de demostrar propiedades usando las propiedades de las subexpresiones y métodos de deducción lógica.
+    Y pueden estar bien o mal formadas, dependiendo de las reglas sintácticas y de las reglas de asignación de tipos.
+  \item \xbf{Funciones:} son valores especiales que representan ``transformaciones de datos''. Nótese que al ser valores, pueden ser argumento de otras funciones, resultado, almacenarse en estructuras de datos, ser estructuras de datos, etc. Llamamos funciones de \xbf{alto orden} a las funciones que trabajan con funciones.
+  \item \xbf{Transparencia referencial:} el valor de una expresión depende sólo de los elementos que la constituyen. Esto implica, por ejemplo, que los detalles de ejecución no influencian el comportamiento del programa. Además, existe la posibilidad de demostrar propiedades usando las propiedades de las subexpresiones y métodos de deducción lógica.
   \item \xbf{Ecuaciones orientadas:} tienen la forma $e_1 = e_2$, donde $e_1$ y $e_2$ expresan el mismo valor. Decimos que están orientadas porque se puede utilizar $e_2$ para reemplazar una aparición de $e_1$ en alguna expresión (pero no al revés).
   \item \xbf{Programa funcional:} es un conjunto de ecuaciones que definen una o más funciones. Para usarlo, resolvemos la reducción de la aplicación de una función a sus datos (reducción de una expresión).
 \end{itemize}
@@ -49,7 +49,7 @@ Es decir, toda expresión debería tener un tipo para ser válida.
 
 \paragraph{Chequeo de tipos:} dada una expresión \xtt{e} y un tipo \xtt{A}, determinar si \xtt{e} tipa \xtt{A} (\xtt{e :: A}) según las reglas, o no.
 
-\paragraph{Sistema de tipado fuerte (tipado fuerte/strong typing):} acepta una expresión si, y solo si, ésta tiene tipo según las reglas.
+\paragraph{Sistema de tipado fuerte (strong typing):} acepta una expresión si, y solo si, ésta tiene tipo según las reglas.
 
 \paragraph{Sistema de Hindley-Milner} es un sistema de tipos que propone:
 
@@ -69,13 +69,13 @@ Es decir, toda expresión debería tener un tipo para ser válida.
   \item \xbf{Polimorfismo:} permite que una expresión tenga más de un sólo tipo. El polimorfismo paramétrico soluciona esto usando \xbf{variables de tipos}, ejemplo: \xtt{id :: a -> a}.
 \end{itemize}
 
-\subsubsection{Tipos algebráicos} Es un conjunto de valores junto con las operaciones que se les pueden realizar.
+\subsubsection{Tipos algebraicos} Es un conjunto de valores junto con las operaciones que se les pueden realizar.
 
 \subsubsection{Tipo abstracto (TAD)}
 
-\subsubsection{Pattern matching} es un mecanismo para acceder a los parametros con los que fue construido un Tipo Algebráico. \xbf{Pattern} es una expresión utilizando constructores y variables sin repetir. \xbf{Matching} es la operación que dice si una expresión es de la forma de un patrón.
+\subsubsection{Pattern matching} es un mecanismo para acceder a los parámetros con los que fue construido un Tipo Algebraico. \xbf{Pattern} es una expresión utilizando constructores y variables sin repetir. \xbf{Matching} es la operación que dice si una expresión es de la forma de un patrón.
 
-\subsubsection{Tipos algebráicos recursivos} representan conjuntos inductivos, al menos un constructor de tener al menos un parámetro de tipo si mismo.
+\subsubsection{Tipos algebraicos recursivos} representan conjuntos inductivos, al menos un constructor de tener al menos un parámetro de tipo si mismo.
 
 \subsection{Currificación}
 
@@ -106,12 +106,12 @@ O sea, que hay una correspondencia entre los tipos \xtt{(a,b) -> c} y \xtt{a -> 
   \item Tipos básicos: \xtt{Int}, \xtt{Bool}, \xtt{Float}, \xtt{Pares}, \xtt{Listas}, \xtt{Funciones}, etc.
   \item No toda evaluación termina.
   \item Utiliza evaluación \xit{Lazy o Normal}: una subexpresión se evalua sólo si es necesario.
-  \item Polimorfismo párametrico.
+  \item Polimorfismo paramétrico.
   \item Alto orden
   \item Currificación
 \end{itemize}
 
-\subsubsection{Esquemas de recursion}
+\subsubsection{Esquemas de recursión}
 
 \subsubsection{Monadas}
 
@@ -138,7 +138,7 @@ El objetivo de la Mónada es incorporar \xit{efectos} a un valor.
   \item \xtt{($>>=$)} \xit{secuencia} efectos con \xit{dependencia} de datos.
 \end{itemize}
 
-Es una forma de abstraer comportamientos específicos en un cómputo. Cada mónaad se diferencia de las demás por sus operaciones adicionales:
+Es una forma de abstraer comportamientos específicos en un cómputo. Cada mónada se diferencia de las demás por sus operaciones adicionales:
 \begin{itemize}
   \item \xtt{Maybe} tiene \xtt{fail}
   \item \xtt{State} tiene \xtt{incrementar}
@@ -192,7 +192,7 @@ eval (Div e1 e2) = eval e1 </> eval e2
 
 \subsection{Lambda cálculo}
 
-Fue introducido por \xit{Alonzo Church} en 1934, y presenta un modelo de comptuación basado en \xbf{funciones}.
+Fue introducido por \xit{Alonzo Church} en 1934, y presenta un modelo de computación basado en \xbf{funciones}.
 
 La formulación original es sin tipos, pero posteriormente (1941) se introduce el \xbf{Lambda cálculo tipado}, que es el que vamos a estudiar.
 
@@ -300,9 +300,9 @@ Entonces, $M$ es \xit{tipable}  si $\Gamma \rhd M : \sigma$ puede derivarse usan
 
 \subsubsection{Semántica operacional}
 
-Habiendo definido la sintaxis de $\lambda^b$, nos interesa formular cómo se evalúan o ejecutan los términos. Esto se puede hacer de varias formas: operacional, denotacional y axiomática. Nosotros vamos a user \xit{operacional}.
+Habiendo definido la sintaxis de $\lambda^b$, nos interesa formular cómo se evalúan o ejecutan los términos. Esto se puede hacer de varias formas: operacional, denotacional y axiomática. Nosotros vamos a usar \xit{operacional}.
 
-La semántica operacional consiste en interpretar a los \xit{términos como estados} de una máquina abstracta y definir una \xit{función de transición} que indica, dado un estado, cúal es el estado siguiente. De esta forma, el \xit{significado} de un término $M$ es el estado final que alcanza la máquina empezando desde $M$. Hay principalmente dos formas de definir la función de transición:
+La semántica operacional consiste en interpretar a los \xit{términos como estados} de una máquina abstracta y definir una \xit{función de transición} que indica, dado un estado, cual es el estado siguiente. De esta forma, el \xit{significado} de un término $M$ es el estado final que alcanza la máquina empezando desde $M$. Hay principalmente dos formas de definir la función de transición:
 
 \begin{itemize}
   \item \xbf{Small-step}: la función de transición describe un paso de computación.
@@ -419,7 +419,7 @@ Y al conjunto de expresiones:
 
 Informalmente:
 \begin{itemize}
-  \item El regsitro $\{I_i = M_i^{\ i \in 1..n}\}$ evalúa a $\{I_i = V_i^{\ i \in 1..n}\}$ donde $V_i$ es el valor al que evalúa $M_i$, $i \in 1..n$.
+  \item El registro $\{I_i = M_i^{\ i \in 1..n}\}$ evalúa a $\{I_i = V_i^{\ i \in 1..n}\}$ donde $V_i$ es el valor al que evalúa $M_i$, $i \in 1..n$.
   \item $M.I$: evaluar $M$ hasta que arroje $\{I_i = V_i^{\ i \in 1..n}\}$, luego proyectar el campo correspondiente.
 \end{itemize}
 
@@ -433,7 +433,7 @@ Los valores se expanden a:
 
 \[V :: \dots \vert \{I_i = V_i^{\ i \in 1..n}\}\]
 
-Y las reglas de semantica operacional son:
+Y las reglas de semántica operacional son:
 
 \[\deriv{j \in 1..n}{\{I_i = V_i^{\ i \in 1..n}\}.I_j \to V_j}{E-ProjRcd}\]
 
@@ -447,7 +447,7 @@ Esta extensión nos ayuda a mejorar la legibilidad. Agregamos a las expresiones:
 
 \[M :: \dots \vert let\ x : \sigma = M\ in\ N\]
 
-Informalmente, $let\ x : \sigma = M\ in\ N$ evalua $M$ a un valor $V$, liga la variable $x$ a $V$ y evalua $N$.
+Informalmente, $let\ x : \sigma = M\ in\ N$ evalúa $M$ a un valor $V$, liga la variable $x$ a $V$ y evalúa $N$.
 Esta extensión no agrega tipos nuevos.
 
 Las reglas de tipado son:
@@ -479,7 +479,7 @@ Las operaciones básicas que vamos a manejar son:
   \item Asignación: $x := M$ almacena en la referencia $x$ el valor de $M$.
 \end{itemize}
 
-Estas 3 operaciónes son \xbf{comandos}: expresiones que no interesan por su valor, sino por su \xbf{efecto}. Entonces, decimos que se evalúan para causar un efecto, y lo expresamos con un nuevo valor $unit$.
+Estas 3 operaciones son \xbf{comandos}: expresiones que no interesan por su valor, sino por su \xbf{efecto}. Entonces, decimos que se evalúan para causar un efecto, y lo expresamos con un nuevo valor $unit$.
 
 En este momento nos estamos alejando de lo que serían un lenguaje funcional puro, en el que las expresiones son puras en el sentido de carecer de efectos.
 
@@ -517,7 +517,7 @@ Para formalizar la semántica operacional, primero debemos preguntarnos: ¿Qué 
   \item Notación:
     \begin{itemize}
       \item $\mu[l \mapsto V]$ es el store resultante de pisar $\mu(l)$ con $V$.
-      \item $\mu\ {\scriptstyle \medoplus}\ (l \mapsto V)$ es el store extendido resultante de amliar $\mu$ con una nueva asociación $l \mapsto V$ (asumimos $l \notin Dom(\mu)$).
+      \item $\mu\ {\scriptstyle \medoplus}\ (l \mapsto V)$ es el store extendido resultante de ampliar $\mu$ con una nueva asociación $l \mapsto V$ (asumimos $l \notin Dom(\mu)$).
     \end{itemize}
   \item Además, $\Gtipa{l}{?}$ depende de los valores que se almacenen en la dirección $l$. Esta situación es parecida a las variables libres, con lo que precisamos un ``contexto de tipado'' para direcciones: $\Sigma$ función parcial de direcciones a tipos. Con esto, armamos un nuevo juicio de tipado: $\GStipa{M}{\sigma}$.
   \item Y los juicios de evaluación, en vez de ser de la forma $M \to M'$, ahora son  $M \vert \mu \to M' \vert \mu'$. Que se lee como: ``Teniendo la expresión $M$, el store $\mu$ reduce la expresión a $M'$, y nos queda el store $\mu'$''.
@@ -585,7 +585,7 @@ No se precisan nuevos tipos, pero sí una regla de tipado:
 
 \[\deriv{\Gtipa{M}{\sigma_1 \to \sigma_1}}{\Gtipa{fix\ M}{\sigma_1}}{T-Fix}\]
 
-No hay valorse nuevos. La semantica operacional es:
+No hay valores nuevos. La semántica operacional es:
 
 \[\deriv{M_1 \to M_1'}{fix\ M_1 \to fix\ M_1'}{E-Fix}\quad\quad \deriv{}{fix\ (\abs{x}{\sigma}{M}) \to \sust{M}{x\from fix\  (\abs{x}{\sigma}{M})}}{E-FixBeta}\]
 
@@ -601,7 +601,7 @@ Es un procedimiento que consiste en transformar términos \xit{sin} información
 
 \paragraph{Función de borrado}
 
-LLamamos \erase{\cdot} a la función que dado un término \xit{elimina} las anotaciones de tipos de las abstracciones. Ejemplo: $\erase{\abs{x}{Nat}{\abs{f}{Nat\to Nat}{f\ x}}} = \stabs{x}{\stabs{f}{f\ x}}$
+Llamamos \erase{\cdot} a la función que dado un término \xit{elimina} las anotaciones de tipos de las abstracciones. Ejemplo: $\erase{\abs{x}{Nat}{\abs{f}{Nat\to Nat}{f\ x}}} = \stabs{x}{\stabs{f}{f\ x}}$
 
 Entonces queremos, dado un término $U$ \xit{sin} anotaciones de tipos, hallar un término estándar $M$ tal que:
 \begin{itemize}
@@ -609,7 +609,7 @@ Entonces queremos, dado un término $U$ \xit{sin} anotaciones de tipos, hallar u
   \item $\erase{M} = U$
 \end{itemize}
 
-Notar que este problema es más difícil que el chequeo de tipos para un término estandar $M$ que haciamos utilizando los axiomas y reglas del sistema de tipado.
+Notar que este problema es más difícil que el chequeo de tipos para un término estándar $M$ que hacíamos utilizando los axiomas y reglas del sistema de tipado.
 
 \paragraph{Variables de tipos}
 
@@ -642,7 +642,7 @@ Un juicio de tipado $\Gamma' \rhd M' : \sigma'$ es una instancia de $\Gamma \rhd
 
 Entonces, queremos definir una función \w{\cdot} que dado un término $U$ sin anotaciones verifica:
 \begin{itemize}
-  \item \xbf{Correción:} $\w{U} = \Gamma \rhd M : \sigma$ implica
+  \item \xbf{Corrección:} $\w{U} = \Gamma \rhd M : \sigma$ implica
     \begin{itemize}
       \item $\erase{M} = U$
       \item $\Gamma \rhd M : \sigma$ es derivable
@@ -656,10 +656,10 @@ Entonces, queremos definir una función \w{\cdot} que dado un término $U$ sin a
 
 \subsubsection{Unificación}
 
-La idea de nuestro algoritmo de inferencia va a ser analizar un término (sin anotaciones de tipo) a partir de sus subtérminos. El problema es que, una vez obtenida la información inferida de los subterminos, debemos:
+La idea de nuestro algoritmo de inferencia va a ser analizar un término (sin anotaciones de tipo) a partir de sus subtérminos. El problema es que, una vez obtenida la información inferida de los subtérminos, debemos:
 \begin{itemize}
   \item \xbf{Consistencia:} determinas si la información de cada subtérmino es consistente.
-  \item \xbf{Síntesis:} sintetizar la información del término original a partir de la información de los subterminos. Esto involucra \xit{compatibilizar} o \xit{unificar} la información de tipos cuando dos subtérminos tienen una misma variable.
+  \item \xbf{Síntesis:} sintetizar la información del término original a partir de la información de los subtérminos. Esto involucra \xit{compatibilizar} o \xit{unificar} la información de tipos cuando dos subtérminos tienen una misma variable.
 \end{itemize}
 
 El proceso de determinar si existe un sustitución $S$ tal que dos expresiones de tipos $\sigma$, $\tau$ son unificables (i.e. $S\sigma = S\tau$) se llama \xbf{unificación}.
@@ -724,7 +724,7 @@ Las reglas de este algoritmo son:
 
 El algoritmo que vamos a presentar se basa en definir \w{U} por recursión sobre la estructura de $U$, y utiliza el algoritmo de unificación para ir sintetizando la información de las subexpresiones de $U$.
 
-Presentamos las reglas para los casos cómunes:
+Presentamos las reglas para los casos comunes:
 
 \paragraph{Caso constantes y variables}
 
