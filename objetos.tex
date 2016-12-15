@@ -5,7 +5,7 @@
 \begin{itemize}
   \item Computación a través del intercambio de mensajes entre objetos.
   \item Los objetos se agrupan en clases, y estas se agrupan en jerarquías.
-  \item Tine un \xbf{alto nivel de abstracción}: los conceptos centrales son los de objetos, clases y mensajes.
+  \item Tiene un \xbf{alto nivel de abstracción}: los conceptos centrales son los de objetos, clases y mensajes.
   \item Tiene una \xbf{arquitectura extensible}: jerarquía de clases, polimorfismo de subtipos y binding dinámico.
   \item La matemática y razonamiento algebraico tiende a ser más compleja.
   \item La arquitectura de los programas se basan en \xbf{módulos} deducidos de objetos del dominio.
@@ -21,7 +21,7 @@
   \item Mensaje: Conjunto de colaboraciones entre objetos
 \end{itemize}
 
-El resultado es que los \xbf{objetos colaboran} entre sí enviandose \xbf{mensajes}.
+El resultado es que los \xbf{objetos colaboran} entre sí enviándose \xbf{mensajes}.
 
 Notar que el concepto de objeto no aparece al principio de la lista. El concepto principal es el de Modelo. Que todo sea un objeto es una consecuencia, no un objetivo.
 
@@ -56,7 +56,7 @@ En los lenguajes de clasificación orientados a objetos, por cada entidad del pr
 
 Su esencias es saber crear instancias y definir el comportamiento de ellas.
 
-En estos casos el tipado estático es una complicación, y el tipado dinámico un feature. Si el lenguaje es estaticamente tipado, es un problema pensar el protocolo a implementar por la clase de antemano. Además, el \xbf{Method LookUp} (búsqueda y llamado del código a ejecutar) se complica, mientras que con tipado dinámico se vuelve más flexible y permite varias optimizaciones.
+En estos casos el tipado estático es una complicación, y el tipado dinámico un feature. Si el lenguaje es estáticamente tipado, es un problema pensar el protocolo a implementar por la clase de antemano. Además, el \xbf{Method LookUp} (búsqueda y llamado del código a ejecutar) se complica, mientras que con tipado dinámico se vuelve más flexible y permite varias optimizaciones.
 
 Notar que como todo es un objeto, por lo tanto las clases también lo son. Pero los objetos solo existen cuando su clase existe. Para eso existe la clase \xtt{ProtoObject}, que no tiene clase padre, y la clase \xtt{MetaClass}, que es instancia de si misma.
 
@@ -73,13 +73,13 @@ Este mecanismo se suele llamar \xit{herencia}, y está pensado para construir te
 Es la forma en la que un objeto se refiere a si mismo. Es una pseudo-variable:
 \begin{itemize}
   \item Una palabra reservada.
-  \item Simpre está y no se puede asignar.
+  \item Siempre está y no se puede asignar.
   \item Representa al objeto que recibió el mensaje y está ejecutando el método.
 \end{itemize}
 
 \paragraph{Super}
 
-Tiene exactamente las mismas propiedaes que \xtt{self}. La única diferencia es que el \xit{Method lookup} se realiza en la clase padre.
+Tiene exactamente las mismas propiedades que \xtt{self}. La única diferencia es que el \xit{Method lookup} se realiza en la clase padre.
 
 \paragraph{Tipos de mensajes}
 
@@ -117,21 +117,21 @@ Veamos las diferencias entre los 3:
 \begin{itemize}
   \item Un bloque es simplemente un pedazo de código (o función) cerrado (sin variables libres).
   \item Closure agrega \xit{Binding Lexicográfico} de variables a los bloques. De esta forma, las variables libres del Closure se ligan con las variables que tenían el mismo nombre cuando fue creado.
-  \item Full Closure agrega además un control apropiado de flujo. Es decir, si por ejemplo hacemos un return dentro de un full closure, es como si estuvieramos haciendo un return en el scope en el que fue creado.
+  \item Full Closure agrega además un control apropiado de flujo. Es decir, si por ejemplo hacemos un return dentro de un full closure, es como si estuviéramos haciendo un return en el scope en el que fue creado.
 \end{itemize}
 
 \todo{Revisar, no está muy claro}
 
 \subsection{Sistema de tipos}
 
-Algunos errores de tipos habituales en un languaje orientado a objetos suelen ser:
+Algunos errores de tipos habituales en un lenguaje orientado a objetos suelen ser:
 \begin{itemize}
   \item Métodos que no reciben la cantidad y tipo de parámetros correctos.
   \item Asignaciones que no respetan el tipo declarado de las variables y campos.
   \item Invocación a métodos inexistentes.
 \end{itemize}
 
-Tener en cuenta que las nociones de clase y tipo se mantien separadas:
+Tener en cuenta que las nociones de clase y tipo se mantienen separadas:
 \begin{itemize}
   \item Clase: inherentemente de implementación (ej. variables de instancia privadas, código fuente de los métodos, etc.)
   \item Tipo de un objeto, la interfaz pública del mismo: nombres de todos los métodos, junto con el tipo de los argumentos y del resultado.
@@ -186,11 +186,11 @@ Recordemos las reglas de tipado para registros:
 
 \[\deriv{\Gamma \rhd M : \{I_i : \sigma_{i}^{\ i \in 1..n}\}\quad j\in 1..n}{\Gamma \rhd M.I_j : \sigma_j}{T-Proj}\]
 
-Cuando pensamos en registros, lo primero que queremos hacer es lograr que subtipen a lo ``ancho''. Es decir, que valga por ejemplo, \subt{\{nombre: String, edad: Int\}}{\{nombre: String\}}, ya que en todos los contextos donde esperemos un registro con la etiqueta \xit{nombre} no nos importa si el registro además tiene otras etiquetas. Con este objetivo, introducimos la siguente regla de subtipado:
+Cuando pensamos en registros, lo primero que queremos hacer es lograr que subtipen a lo ``ancho''. Es decir, que valga por ejemplo, \subt{\{nombre: String, edad: Int\}}{\{nombre: String\}}, ya que en todos los contextos donde esperemos un registro con la etiqueta \xit{nombre} no nos importa si el registro además tiene otras etiquetas. Con este objetivo, introducimos la siguiente regla de subtipado:
 
 \[\deriv{}{\subt{\{I_i : \sigma_i \vert I \in 1..n + k\}}{\{I_i:\sigma_i \vert I \in 1..n\}}}{S-RcdWidth}\]
 
-Sin embargo, esta regla sóla tiene una limitación. En los casos como \subt{\{a: Alumno, b: Int\}}{\{a:Persona\}}, la regla anterior no funcionaría, ya que si bien es la misma estiqueta ``a'', el tipo es distinto. Pero nos gustaría que funcionara, ya que esperamos una Persona, y \xbf{un Alumno es una Persona} (\subt{Alumno}{Persona}). Entonces, introducimos la regla de subtipado de registros en ``profundidad'':
+Sin embargo, esta regla sola tiene una limitación. En los casos como \subt{\{a: Alumno, b: Int\}}{\{a:Persona\}}, la regla anterior no funcionaría, ya que si bien es la misma etiqueta ``a'', el tipo es distinto. Pero nos gustaría que funcionara, ya que esperamos una Persona, y \xbf{un Alumno es una Persona} (\subt{Alumno}{Persona}). Entonces, introducimos la regla de subtipado de registros en ``profundidad'':
 
 \[\deriv{\subt{\sigma_i}{\tau_i}\quad i\in I = \{1..n\}}{\subt{\{I_i : \sigma_i\}_{i\in I}}{\{I_i : \tau_i\}_{i\in I}}}{S-RcdDepth}\]
 
@@ -218,7 +218,7 @@ Ejemplo de que no es contravariante: si $\subt{Bool}{Int}$ entonces según la re
 
 Hasta ahora, las reglas de tipado \xbf{sin} subtipado eran dirigidas por sintaxis. Esto hace que sea inmediato implementar un algoritmo de chequeo de tipos a partir de ellas.
 
-Sin embargo, al agregar \xbf{Subsumption}, ya no son dirigidas por sintaxis. Un análisis rápido determina que el único lugar donde se precisa subtipar es al aplicar una función a un argumento. Esto sugiere la siguente modificación:
+Sin embargo, al agregar \xbf{Subsumption}, ya no son dirigidas por sintaxis. Un análisis rápido determina que el único lugar donde se precisa subtipar es al aplicar una función a un argumento. Esto sugiere la siguiente modificación:
 
 \[\deriv{\Gtipa{M}{\sigma\to\tau}\quad \Gtipa{N}{\rho}\quad \subt{\rho}{\sigma}}{\Gtipa{\app{M}{N}}{\tau}}{T-App}\]
 
@@ -226,7 +226,7 @@ Pero igual hay que ver como se implementa en el algoritmo de subtipado.
 
 Las reglas de subtipado no son dirigida por sintaxis, y el problema viene de las reglas \xtt{S-Refl} y \xtt{S-Trans}.
 
-Observando que se puede probar $\subt{\sigma}{\sigma}$ y transitividad, siempre que se tenga la reflexividad para los tipos escalares: $\subt{Nat}{Nat}$, $\subt{Bool}{Bool}$ y $\subt{Float}{Float}$, agregamos esas 3 reglas y no consideramos explicitamente a \xtt{S-Refl} y \xtt{S-Trans}.
+Observando que se puede probar $\subt{\sigma}{\sigma}$ y transitividad, siempre que se tenga la reflexividad para los tipos escalares: $\subt{Nat}{Nat}$, $\subt{Bool}{Bool}$ y $\subt{Float}{Float}$, agregamos esas 3 reglas y no consideramos explícitamente a \xtt{S-Refl} y \xtt{S-Trans}.
 
 Luego, el algoritmo de chequeo de subtipos (obviando los axiomas de Nat, Bool, Float) nos queda:
 

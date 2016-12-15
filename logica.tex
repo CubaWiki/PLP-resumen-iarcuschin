@@ -3,12 +3,12 @@
 \subsection{Características generales}
 
 \begin{itemize}
-  \item Se basa en el uso de la lógica como un lengauje de programación: los programas son predicados.
+  \item Se basa en el uso de la lógica como un lenguaje de programación: los programas son predicados.
   \item La computación se expresa a través de ``proof search''. Para esto, se especifican ciertos \xbf{hechos} y \xbf{reglas}, así como un objetivo o \xbf{goal} a probar. Luego, un motor de inferencia trata de probar que el objetivo es consecuencia de los hechos y reglas.
   \item No hay un estado global.
   \item Los resultados intermedios son pasados a través de unificación.
   \item Repetición basada en recursión.
-  \item Tine un \xbf{alto nivel de abstracción}: tiende a ser una \xit{especificación ejecutable}.
+  \item Tiene un \xbf{alto nivel de abstracción}: tiende a ser una \xit{especificación ejecutable}.
   \item Es \xbf{declarativo}: la máquina se encarga de buscar el \xit{cómo} y nosotros elegimos el \xit{qué}.
   \item Fundamento lógico robusto. Utiliza técnicas de \xit{Resolución}.
   \item Ejecución lenta en comparación con otros paradigmas.
@@ -47,7 +47,7 @@ Una valuación \xbf{satisface} una proposición $A$ si $v \models A$ donde
   v \models A \iff B &\text{ sii } (v \models A \text{ sii } v \models B) \\
 \end{align*}
 
-\paragraph{Tautologías y satisfactibilidad}
+\paragraph{Tautologías y satisfacibilidad}
 
 Una proposición $A$ es:
 \begin{itemize}
@@ -136,13 +136,13 @@ es insatisfacible sii
 
 es insatisfacible.
 
-Las claúsula $\{A,B\}$ se llama resolvente de las cláusulas $\{A, P\}$ y $\{B, \lnot P.\}$. El resolvente de las cláusulas $\{P\}$ y $\{\lnot P\}$ es la cláusula vacia y se anota $\square$.
+Las cláusula $\{A,B\}$ se llama resolvente de las cláusulas $\{A, P\}$ y $\{B, \lnot P.\}$. El resolvente de las cláusulas $\{P\}$ y $\{\lnot P\}$ es la cláusula vacía y se anota $\square$.
 
 Entonces, la regla de resolución nos queda:
 
 \[\resol{\{A_1,\dots,A_m,Q\}\ \{B_1,\dots,B_n,\lnot Q\}}{\{A_1,\dots,A_m, B_1,\dots,B_n\}}\]
 
-En el método de resolución, cada \xbf{paso de resolución} consiste en agregar a un conjunto $S$ la resolvente $C$ de dos cláusulas $C_1, C_2$ que pertenecen a $S$ (asumimos que $C$ no pertenecía a $S$). Lo importante es que cada paso de resolución preserva la insatisficabilidad, por lo que $S$ es insatisfacible sii $S \cup \{C\}$ es insatisfacible.
+En el método de resolución, cada \xbf{paso de resolución} consiste en agregar a un conjunto $S$ la resolvente $C$ de dos cláusulas $C_1, C_2$ que pertenecen a $S$ (asumimos que $C$ no pertenecía a $S$). Lo importante es que cada paso de resolución preserva la insatisfacibilidad, por lo que $S$ es insatisfacible sii $S \cup \{C\}$ es insatisfacible.
 
 Por último, un conjunto de cláusulas se llama una \xbf{refutación} si contiene a la cláusula vacía ($\square$), que es insatisfacible.
 
@@ -193,13 +193,13 @@ Sea $\mathcal{V}$ un conjunto numerable de variables. El conjunto de $\mathcal{L
   \item Si $t_1,\dots,t_n \in \mathcal{L}$-términos y $f$ es un símbolo de función de aridad $n$, entonces $f(t_1,\dots,t_n) \in \mathcal{L}$-términos
 \end{itemize}
 
-El cónjunto de $\mathcal{L}$-fórmulas atómicas se define inductivamente como:
+El conjunto de $\mathcal{L}$-fórmulas atómicas se define inductivamente como:
 \begin{itemize}
   \item Todo símbolo de predicado de aridad 0 es una $\mathcal{L}$-fórmula atómica
   \item Si $t_1,\dots,t_n \in \mathcal{L}$-términos y $P$ es un símbolo de predicado de aridad $n$, entonces $P(t_1,\dots,t_n) \in \mathcal{L}$-fórmulas atómicas
 \end{itemize}
 
-El cónjunto de $\mathcal{L}$-fórmulas se define inductivamente como:
+El conjunto de $\mathcal{L}$-fórmulas se define inductivamente como:
 \begin{itemize}
   \item Toda $\mathcal{L}$-fórmula atómica es una $\mathcal{L}$-fórmula
   \item Si $A,B \in \mathcal{L}$-fórmulas, entonces $(A \land B)$, $(A \lor B)$, $(A \supset B)$, $(A \iff B)$ y $\lnot A$ son $\mathcal{L}$-fórmulas
@@ -335,7 +335,7 @@ La forma normal de Skolem de $A$ (escrito como $SK(A)$) se puede definir recursi
 
 \paragraph{Forma normal conjuntiva (FNC)}
 
-Este paso es identico a como hacíamos cuando estabamos trabajando con fórmulas proposicionales. Llevamos la fórmula a la forma
+Este paso es idéntico a como hacíamos cuando estábamos trabajando con fórmulas proposicionales. Llevamos la fórmula a la forma
 
 \[C_1 \land \dots \land C_r\]
 
@@ -353,9 +353,9 @@ Por último, lo simplificamos escribiendo $\{C_1, \dots, C_r\}$
 
 \paragraph{Regla de resolución para lógica de primer orden}
 
-Ahora que tenemos nuesta fórmula en correctamente Forma Clausal veamos como hacemos para aplicar resolución.
+Ahora que tenemos nuestra fórmula en correctamente Forma Clausal veamos como hacemos para aplicar resolución.
 
-Cómo motivación, consideremos la fórmula $(\forall x. P(x)) \land \lnot P(a)$, que claramente es insatisfacible. Sin embargo, no podemos aplicar la regla de resolución estandar, ya que $P(x)$ y $P(a)$ no son identicos\dots\ pero si son unificables.
+Cómo motivación, consideremos la fórmula $(\forall x. P(x)) \land \lnot P(a)$, que claramente es insatisfacible. Sin embargo, no podemos aplicar la regla de resolución estandar, ya que $P(x)$ y $P(a)$ no son idénticos\dots\ pero si son unificables.
 
 Definimos una nueva regla de resolución, como
 
@@ -368,7 +368,7 @@ donde $\sigma$ es el MGU de $\{B_1,\dots,B_k, D_1,\dots,D_j\}$. Algunas observac
   \item La cláusula $\sigma(\{A_1,\dots,A_m, C_1,\dots,C_n\})$ se llama resolvente, igual que antes.
 \end{itemize}
 
-Análogamente al caso proposicional, tenemos las nociones de cláusula vacia, paso de resolución y refutación. Además, tenemos el siguiente resultado.
+Análogamente al caso proposicional, tenemos las nociones de cláusula vacía, paso de resolución y refutación. Además, tenemos el siguiente resultado.
 
 \begin{teo}[Teorema de Herbrand-Skolem-Gödel]
   Cada paso de resolución en lógica de primer orden preserva satisfacibilidad.
@@ -390,7 +390,7 @@ Si bien el método de resolución general es completo, hallar refutaciones es un
   \item ¿Qué literales eliminamos? Hace falta una Regla de selección.
 \end{itemize}
 
-Estas reglas ayudan a reducir el espacio de búsqueda, y es deseable que estas restricciones no reunien a la completitud del método.
+Estas reglas ayudan a reducir el espacio de búsqueda, y es deseable que estas restricciones no renuncien a la completitud del método.
 
 Una secuencia de pasos de resolución a partir de $S$ es \xbf{lineal} si es de la forma:
 
@@ -424,14 +424,14 @@ Observaciones de la resolución lineal:
 \begin{itemize}
   \item En general, reduce el espacio de búsqueda considerablemente.
   \item Preserva completitud.
-  \item Sin embargo, sigue siendo altamente no-determinísitco.
+  \item Sin embargo, sigue siendo altamente no-determinístico.
 \end{itemize}
 
 \subsection{Cláusulas de Horn}
 
 Es un tipo de subclase de fórmulas para las cuales existen procesos eficientes para producir refutaciones sin perder completitud.
 
-Una cláusula de Horn es una disyunciónd e literales que tiene \xit{a lo sumo} un literal positivo. Para conjuntos de cláusulas de Horn puede la resolución SLD, que tiene buenas propiedades.
+Una cláusula de Horn es una disyunción de literales que tiene \xit{a lo sumo} un literal positivo. Para conjuntos de cláusulas de Horn puede la resolución SLD, que tiene buenas propiedades.
 
 Dividimos estas cláusulas en 3 grupos:
 \begin{itemize}
@@ -500,7 +500,7 @@ Observaciones de la resolución SLD:
   \item No se especifica regla de búsqueda ni de selección.
   \item La sustitución respuesta es $\sigma_p \circ \dots \circ \sigma_2 \circ \sigma_1$
   \item \xbf{Corrección:} Si un conjunto de cláusulas de Horn tiene refutación SLD, entonces es insatisfacible.
-  \item \xbf{Completitud:} Dado un conjunto de cláusulas de Honr $P \cup \{G\}$ tal como se describió, si $P \cup \{G\}$ es insatisfacible, existe una refutación SLD cuya primera cláusula es $G$.
+  \item \xbf{Completitud:} Dado un conjunto de cláusulas de Horn $P \cup \{G\}$ tal como se describió, si $P \cup \{G\}$ es insatisfacible, existe una refutación SLD cuya primera cláusula es $G$.
 \end{itemize}
 
 \subsection{Prolog}
@@ -529,12 +529,12 @@ Dado que $(A_1 \land \dots \land A_n) \supset B \iff \lnot (A_1 \land \dots \lan
     \item Se hace un push del resolverte del átomo del tpo de la pila con la cláusula de definición.
     \item Se hace un pop cuando el átomo del top de la pila no unifica con ninguna cláusula de definición más (luego, el átomo que queda en el tope se unifica con la siguiente cláusula de definición).
   \end{itemize}
-  \item \xbf{Desventaja:} puede no llegar a enconrtar una refutación SLD aún si existe.
+  \item \xbf{Desventaja:} puede no llegar a encontrar una refutación SLD aún si existe.
 \end{itemize}
 
 \paragraph{Operador Cut}
 
-Es una anotación que permite poder el árbol SLD, y se encuentra presente por cuestiones de eficiencia. En prolog se escribe el símbolo \xtt{!}.
+Es una anotación que permite poder el árbol SLD, y se encuentra presente por cuestiones de eficiencia. En Prolog se escribe el símbolo \xtt{!}.
 
 \begin{itemize}
   \item Cuando se selecciona un cut, tiene éxito inmediatamente.
@@ -548,7 +548,7 @@ Antes veamos algunas definiciones:
 
 \begin{itemize}
   \item Decimos que un árbol SLD \xbf{falla finitamente} si es finito y no tiene ramas de éxito.
-  \item Dado un programa $P$, definimos el \xbf{conjunto de falla finita} de $P$ como \{$B$ | $B$ átomo cerrado ('ground') y existe un árbol SLD que falla finitamente con  $B$ como raiz \}
+  \item Dado un programa $P$, definimos el \xbf{conjunto de falla finita} de $P$ como \{$B$ | $B$ átomo cerrado ('ground') y existe un árbol SLD que falla finitamente con  $B$ como raíz \}
 \end{itemize}
 
 Entonces, la \xbf{negación por falla} se define como:
@@ -562,7 +562,7 @@ not(G) :- call(G), !, fail.
 not(G).
 \end{lstlisting}
 
-La clave está en combinar el operador \xtt{!} y \xtt{fail}. Una vez que el \xtt{Goal} tiene éxito, el cut nos prohibe de volver atras en el árbol SLD, y el \xtt{fail} hace que la solución actual falle. Como no hay más ramas que explorar, toda la consulta falla.
+La clave está en combinar el operador \xtt{!} y \xtt{fail}. Una vez que el \xtt{Goal} tiene éxito, el cut nos prohíbe de volver atrás en el árbol SLD, y el \xtt{fail} hace que la solución actual falle. Como no hay más ramas que explorar, toda la consulta falla.
 
 Notar que es distinto a la negación lógica. Si la cláusulas no es cerrada, \xtt{not(G)} tiene éxito si no existe \xit{ninguna} valuación tal que \xtt{G} se satisface.
 
