@@ -5,10 +5,10 @@
 \begin{itemize}
   \item Computación a través del intercambio de mensajes entre objetos.
   \item Los objetos se agrupan en clases, y estas se agrupan en jerarquías.
-  \item Tine un \xbf{alto nivel de abstracción}: los conceptos centrales son los de objetos, clases y mensajes.
+  \item Tiene un \xbf{alto nivel de abstracción}: los conceptos centrales son los de objetos, clases y mensajes.
   \item Tiene una \xbf{arquitectura extensible}: jerarquía de clases, polimorfismo de subtipos y binding dinámico.
   \item La matemática y razonamiento algebraico tiende a ser más compleja.
-  \item La arquitectura de los programas se basan en \xbf{módulos} deducidos de objetos del dominio.
+  \item La arquitectura de los programas se basa en \xbf{módulos} deducidos de objetos del dominio.
 \end{itemize}
 
 \subsection{Fundamentos}
@@ -21,22 +21,22 @@
   \item Mensaje: Conjunto de colaboraciones entre objetos
 \end{itemize}
 
-El resultado es que los \xbf{objetos colaboran} entre sí enviandose \xbf{mensajes}.
+El resultado es que los \xbf{objetos colaboran} entre sí enviándose \xbf{mensajes}.
 
 Notar que el concepto de objeto no aparece al principio de la lista. El concepto principal es el de Modelo. Que todo sea un objeto es una consecuencia, no un objetivo.
 
 \subsection{Mensajes}
- Los mensajes definen al objeto, ya que nos dicen qué saben hacer los objetos.
+ Los mensajes definen al objeto, ya que nos dicen qué sabe hacer.
  Mediante estos mensajes que saben responder, los objetos definen su comportamiento, su esencia.
 
- Definimos la \xbf{esencia} de un objeto como el conjunto minimal de mensajes tales que, al sacar uno de ellos el objeto deja de representar al ente del dominio del problema.
+ Definimos la \xbf{esencia} de un objeto como el conjunto minimal de mensajes tales que, al sacar uno de ellos, el objeto deja de representar al ente del dominio del problema.
 
  En cuanto a la comunicación entre objetos:
 \begin{itemize}
   \item Dirigida: el receptor está presente y es alcanzable (visible) al momento del envío.
   \item Sincrónica: el envío de un mensaje es bloqueante.
   \item Siempre hay respuesta.
-  \item Anónima: el receptor no conoce al emisor, la respuesta no varía en función del emisor.
+  \item Anónima: el receptor no conoce al emisor, la respuesta no varía en función del mismo.
 \end{itemize}
 
 Los mensajes tienen asociada una lista de colaboradores (parámetros/argumentos en el paradigma imperativo) que se envían con él.
@@ -46,7 +46,7 @@ Los mensajes tienen asociada una lista de colaboradores (parámetros/argumentos 
 
 En los lenguajes de prototipado orientados a objetos, todos los entes son de similar jerarquía, no hay abstracciones. Los objetos pueden tener padres (o prototipos) en otros objetos.
 
-Permite trabajar con los objetos sin necesidad de tener clases. Con lo que podemos definir comportamiento por objeto (y crear objetos únicos).
+Permite trabajar con los objetos sin necesidad de tener clases, por lo que podemos definir comportamiento específico por objeto, y crear objetos únicos.
 
 Crear objetos equivale a clonar objetos. Permite modelar sin generalizar ni abstraer.
 
@@ -54,9 +54,9 @@ Crear objetos equivale a clonar objetos. Permite modelar sin generalizar ni abst
 
 En los lenguajes de clasificación orientados a objetos, por cada entidad del problema a modelar existen una o más instancias de esa entidad, y la clase que las define. Esto exige pensar un nombre para dicha clase que represente correctamente lo que se está modelando.
 
-Su esencias es saber crear instancias y definir el comportamiento de ellas.
+Su esencia es saber crear instancias y definir el comportamiento de ellas.
 
-En estos casos el tipado estático es una complicación, y el tipado dinámico un feature. Si el lenguaje es estaticamente tipado, es un problema pensar el protocolo a implementar por la clase de antemano. Además, el \xbf{Method LookUp} (búsqueda y llamado del código a ejecutar) se complica, mientras que con tipado dinámico se vuelve más flexible y permite varias optimizaciones.
+En estos casos el tipado estático es una complicación, y el tipado dinámico un feature. Si el lenguaje es estáticamente tipado, es un problema pensar el protocolo a implementar por la clase de antemano. Además, el \xbf{Method LookUp} (búsqueda y llamado del código a ejecutar) se complica, mientras que con tipado dinámico se vuelve más flexible y permite varias optimizaciones.
 
 Notar que como todo es un objeto, por lo tanto las clases también lo son. Pero los objetos solo existen cuando su clase existe. Para eso existe la clase \xtt{ProtoObject}, que no tiene clase padre, y la clase \xtt{MetaClass}, que es instancia de si misma.
 
@@ -70,16 +70,16 @@ Este mecanismo se suele llamar \xit{herencia}, y está pensado para construir te
 
 \paragraph{Self}
 
-Es la forma en la que un objeto se refiere a si mismo. Es una pseudo-variable:
+Es la forma en la que un objeto se refiere a sí mismo. Es una pseudo-variable:
 \begin{itemize}
   \item Una palabra reservada.
-  \item Simpre está y no se puede asignar.
+  \item Siempre está y no se puede asignar.
   \item Representa al objeto que recibió el mensaje y está ejecutando el método.
 \end{itemize}
 
 \paragraph{Super}
 
-Tiene exactamente las mismas propiedaes que \xtt{self}. La única diferencia es que el \xit{Method lookup} se realiza en la clase padre.
+Tiene exactamente las mismas propiedades que \xtt{self}. La única diferencia es que el \xit{Method lookup} se realiza en la clase padre.
 
 \paragraph{Tipos de mensajes}
 
@@ -117,21 +117,21 @@ Veamos las diferencias entre los 3:
 \begin{itemize}
   \item Un bloque es simplemente un pedazo de código (o función) cerrado (sin variables libres).
   \item Closure agrega \xit{Binding Lexicográfico} de variables a los bloques. De esta forma, las variables libres del Closure se ligan con las variables que tenían el mismo nombre cuando fue creado.
-  \item Full Closure agrega además un control apropiado de flujo. Es decir, si por ejemplo hacemos un return dentro de un full closure, es como si estuvieramos haciendo un return en el scope en el que fue creado.
+  \item Full Closure agrega además un control apropiado de flujo. Es decir, si por ejemplo hacemos un return dentro de un full closure, es como si estuviéramos haciendo un return en el scope en el que fue creado.
 \end{itemize}
 
 \todo{Revisar, no está muy claro}
 
 \subsection{Sistema de tipos}
 
-Algunos errores de tipos habituales en un languaje orientado a objetos suelen ser:
+Algunos errores de tipos habituales en un lenguaje orientado a objetos suelen ser:
 \begin{itemize}
   \item Métodos que no reciben la cantidad y tipo de parámetros correctos.
   \item Asignaciones que no respetan el tipo declarado de las variables y campos.
   \item Invocación a métodos inexistentes.
 \end{itemize}
 
-Tener en cuenta que las nociones de clase y tipo se mantien separadas:
+Tener en cuenta que las nociones de clase y tipo se mantienen separadas:
 \begin{itemize}
   \item Clase: inherentemente de implementación (ej. variables de instancia privadas, código fuente de los métodos, etc.)
   \item Tipo de un objeto, la interfaz pública del mismo: nombres de todos los métodos, junto con el tipo de los argumentos y del resultado.
@@ -141,11 +141,11 @@ El tipo responde a la especificación de un objeto, mientras que la clase a su i
 
 \subsection{Subtipado}
 
-Introducimos ahora la noción de \xbf{Juicio de subtitpado} $\subt{\sigma}{\tau}$, que se entiende como ``En todo contecxto donde se espera una expresión de tipo $\tau$, puede utilizarse una de tipo $\sigma$ en su lugar sin que ello genere un error''. Ejemplo, si \xtt{D} es subclase de \xtt{C}, se espera que \subt{DType}{CType}.
+Introducimos ahora la noción de \xbf{Juicio de subtitpado} $\subt{\sigma}{\tau}$, que se entiende como ``En todo contexto donde se espera una expresión de tipo $\tau$, puede utilizarse una de tipo $\sigma$ en su lugar sin que ello genere un error''. Ejemplo, si \xtt{D} es subclase de \xtt{C}, se espera que \subt{DType}{CType}.
 
 Ahora bien, si $\Gamma \rhd M : \sigma$ y \subt{\sigma}{\tau}, siguiendo el principio de subtipado, podemos armar una nueva regla de tipado llamada \xbf{Subsumption}:
 
-\[\deriv{\Gamma \rhd M : \sigma\ \subt{\sigma}{\tau}}{\Gamma \rhd M : \tau}{T-Subs}\]
+\[\deriv{\Gamma \rhd M : \sigma\ \ \ \subt{\sigma}{\tau}}{\Gamma \rhd M : \tau}{T-Subs}\]
 
 Ahora, podemos empezar a armar axiomas y reglas de subtipado. Para los tipos base asumimos que subtipan de la siguiente forma: \subt{Bool}{Nat}, \subt{Nat}{Int}, \subt{Int}{Float}. Las reglas más básicas son:
 
@@ -153,7 +153,7 @@ Ahora, podemos empezar a armar axiomas y reglas de subtipado. Para los tipos bas
 
 \paragraph{El tipo Top}
 
-Se puede ver como representando la clase \xtt{Object} en Samlltalk.
+Se puede ver como representando la clase \xtt{Object} en Smalltalk.
 
 \[\deriv{}{\subt{\sigma}{Top}}{S-Top}\]
 
@@ -173,9 +173,8 @@ Esto es así ya que si un contexto/programa $P$ espera una expresión $f$ de tip
 \begin{itemize}
   \item Toda aplicación de $f$ está aplicada a argumentos de tipo $\sigma'$
   \item Los mismos se coercionan a argumentos del tipo $\sigma$. Es decir que $\sigma'$ es más específico que $\sigma$. Que es lo mismo que decir que $\sigma$ es más general que $\sigma'$. En un ejemplo concreto: si esperamos una función $Alumno \to Bool$, pueden pasarnos $Persona \to Bool$, pero no $AlumnoDC \to Bool$, porque podríamos usar la función con alumnos que no son del DC.
-  \item Luego se aplica la función, cuyo tpo real es $\sigma\to\tau$.
+  \item Luego se aplica la función, cuyo tipo real es $\sigma\to\tau$.
   \item Finalmente se coerciona el resultado a $\tau'$, el tipo del resultado que $P$ está esperando. Esto quiere decir que $\tau$ es más específico que $\tau'$. Que es lo mismo que decir que $\tau'$ es más general que $\tau$. En un ejemplo concreto: si esperamos una función $Nat \to Alumno$, pueden pasarnos $Nat \to AlumnoDC$, pero no $Nat \to Persona$, porque esa función podría devolver una persona que no es alumno.
-  \item Luego se aplica la función, cuyo tpo real es $\sigma\to\tau$.
 \end{itemize}
 
 \paragraph{Subtipado de registros}
@@ -186,11 +185,11 @@ Recordemos las reglas de tipado para registros:
 
 \[\deriv{\Gamma \rhd M : \{I_i : \sigma_{i}^{\ i \in 1..n}\}\quad j\in 1..n}{\Gamma \rhd M.I_j : \sigma_j}{T-Proj}\]
 
-Cuando pensamos en registros, lo primero que queremos hacer es lograr que subtipen a lo ``ancho''. Es decir, que valga por ejemplo, \subt{\{nombre: String, edad: Int\}}{\{nombre: String\}}, ya que en todos los contextos donde esperemos un registro con la etiqueta \xit{nombre} no nos importa si el registro además tiene otras etiquetas. Con este objetivo, introducimos la siguente regla de subtipado:
+Cuando pensamos en registros, lo primero que queremos hacer es lograr que subtipen a lo ``ancho''. Es decir, que valga por ejemplo, \subt{\{nombre: String, edad: Int\}}{\{nombre: String\}}, ya que en todos los contextos donde esperemos un registro con la etiqueta \xit{nombre} no nos importa si el registro además tiene otras etiquetas. Con este objetivo, introducimos la siguiente regla de subtipado:
 
 \[\deriv{}{\subt{\{I_i : \sigma_i \vert I \in 1..n + k\}}{\{I_i:\sigma_i \vert I \in 1..n\}}}{S-RcdWidth}\]
 
-Sin embargo, esta regla sóla tiene una limitación. En los casos como \subt{\{a: Alumno, b: Int\}}{\{a:Persona\}}, la regla anterior no funcionaría, ya que si bien es la misma estiqueta ``a'', el tipo es distinto. Pero nos gustaría que funcionara, ya que esperamos una Persona, y \xbf{un Alumno es una Persona} (\subt{Alumno}{Persona}). Entonces, introducimos la regla de subtipado de registros en ``profundidad'':
+Sin embargo, esta regla sola tiene una limitación. En los casos como \subt{\{a: Alumno, b: Int\}}{\{a:Persona\}}, la regla anterior no funcionaría, ya que si bien es la misma etiqueta ``a'', el tipo es distinto. Pero nos gustaría que funcionara, ya que esperamos una Persona, y \xbf{un Alumno es una Persona} (\subt{Alumno}{Persona}). Entonces, introducimos la regla de subtipado de registros en ``profundidad'':
 
 \[\deriv{\subt{\sigma_i}{\tau_i}\quad i\in I = \{1..n\}}{\subt{\{I_i : \sigma_i\}_{i\in I}}{\{I_i : \tau_i\}_{i\in I}}}{S-RcdDepth}\]
 
@@ -218,15 +217,15 @@ Ejemplo de que no es contravariante: si $\subt{Bool}{Int}$ entonces según la re
 
 Hasta ahora, las reglas de tipado \xbf{sin} subtipado eran dirigidas por sintaxis. Esto hace que sea inmediato implementar un algoritmo de chequeo de tipos a partir de ellas.
 
-Sin embargo, al agregar \xbf{Subsumption}, ya no son dirigidas por sintaxis. Un análisis rápido determina que el único lugar donde se precisa subtipar es al aplicar una función a un argumento. Esto sugiere la siguente modificación:
+Sin embargo, al agregar \xbf{Subsumption}, ya no son dirigidas por sintaxis. Un análisis rápido determina que el único lugar donde se precisa subtipar es al aplicar una función a un argumento. Esto sugiere la siguiente modificación:
 
 \[\deriv{\Gtipa{M}{\sigma\to\tau}\quad \Gtipa{N}{\rho}\quad \subt{\rho}{\sigma}}{\Gtipa{\app{M}{N}}{\tau}}{T-App}\]
 
-Pero igual hay que ver como se implementa en el algoritmo de subtipado.
+Pero igual hay que ver cómo se implementa en el algoritmo de subtipado.
 
-Las reglas de subtipado no son dirigida por sintaxis, y el problema viene de las reglas \xtt{S-Refl} y \xtt{S-Trans}.
+Las reglas de subtipado no son dirigidas por sintaxis, y el problema viene de las reglas \xtt{S-Refl} y \xtt{S-Trans}.
 
-Observando que se puede probar $\subt{\sigma}{\sigma}$ y transitividad, siempre que se tenga la reflexividad para los tipos escalares: $\subt{Nat}{Nat}$, $\subt{Bool}{Bool}$ y $\subt{Float}{Float}$, agregamos esas 3 reglas y no consideramos explicitamente a \xtt{S-Refl} y \xtt{S-Trans}.
+Observando que se puede probar $\subt{\sigma}{\sigma}$ y transitividad, siempre que se tenga la reflexividad para los tipos escalares: $\subt{Nat}{Nat}$, $\subt{Bool}{Bool}$ y $\subt{Float}{Float}$, agregamos esas 3 reglas y no consideramos explícitamente a \xtt{S-Refl} y \xtt{S-Trans}.
 
 Luego, el algoritmo de chequeo de subtipos (obviando los axiomas de Nat, Bool, Float) nos queda:
 
