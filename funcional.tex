@@ -73,13 +73,13 @@ Es decir, toda expresión debería tener un tipo para ser válida.
 
 \subsubsection{Tipo abstracto (TAD)}
 
-\subsubsection{Pattern matching} es un mecanismo para acceder a los parámetros con los que fue construido un Tipo Algebraico. \xbf{Pattern} es una expresión utilizando constructores y variables sin repetir. \xbf{Matching} es la operación que dice si una expresión es de la forma de un patrón.
+\subsubsection{Pattern matching} Es un mecanismo para acceder a los parámetros con los que fue construido un Tipo Algebraico. \xbf{Pattern} es una expresión utilizando constructores y variables sin repetir. \xbf{Matching} es la operación que dice si una expresión es de la forma de un patrón.
 
-\subsubsection{Tipos algebraicos recursivos} representan conjuntos inductivos, al menos un constructor de tener al menos un parámetro de tipo si mismo.
+\subsubsection{Tipos algebraicos recursivos} Representan conjuntos inductivos. Al menos un constructor debe tener al menos un parámetro de tipo sí mismo.
 
 \subsection{Currificación}
 
-Establece una correspondencia entre cada función de múltiples parámetros y una de alto orden que retorna una función intermedia que completa el trabajo. Es decir, por cada \xtt{f'} definida como:
+Establece una correspondencia entre cada función de múltiples parámetros, y una de alto orden que retorna una función intermedia que completa el trabajo. Es decir, por cada \xtt{f'} definida como:
 \begin{lstlisting}[language=Haskell]
 f' :: (a,b) -> c
 f' (x,y) = e
@@ -302,7 +302,7 @@ Entonces, $M$ es \xit{tipable}  si $\Gamma \rhd M : \sigma$ puede derivarse usan
 
 Habiendo definido la sintaxis de $\lambda^b$, nos interesa formular cómo se evalúan o ejecutan los términos. Esto se puede hacer de varias formas: operacional, denotacional y axiomática. Nosotros vamos a usar \xit{operacional}.
 
-La semántica operacional consiste en interpretar a los \xit{términos como estados} de una máquina abstracta y definir una \xit{función de transición} que indica, dado un estado, cual es el estado siguiente. De esta forma, el \xit{significado} de un término $M$ es el estado final que alcanza la máquina empezando desde $M$. Hay principalmente dos formas de definir la función de transición:
+La semántica operacional consiste en interpretar a los \xit{términos como estados} de una máquina abstracta y definir una \xit{función de transición} que indica, dado un estado, cuál es el estado siguiente. De esta forma, el \xit{significado} de un término $M$ es el estado final que alcanza la máquina empezando desde $M$. Hay principalmente dos formas de definir la función de transición:
 
 \begin{itemize}
   \item \xbf{Small-step}: la función de transición describe un paso de computación.
@@ -350,7 +350,7 @@ El \xbf{Juicio de evaluación en muchos pasos} $\toto$ es la clausura reflexiva,
 
 La versión más usada en la materia del Lambda Cálculo es $\lambda^{bn}$: que tiene $Bool$, $Nat$ y funciones, pero existen varias extensiones que aportan nuevas herramientas.
 
-Cuando definimos una extensión del Cálculo $\lambda$ tenemos que re-definir (o indicar que es lo que se agrega):
+Cuando definimos una extensión del Cálculo $\lambda$ tenemos que re-definir (o indicar qué es lo que se agrega):
 \begin{itemize}
   \item Expresiones válidas
   \item Tipos
@@ -411,7 +411,7 @@ Llamada $\lambda^{\dots r}$. Permite utilizar descriptores de campos de la pinta
 
 Agregamos al conjunto de tipos:
 
-\[\sigma :: \dots \vert \{I_i : \sigma_i^{\ i \in 1..n}\}\]
+\[\sigma ::= \dots \vert \{I_i : \sigma_i^{\ i \in 1..n}\}\]
 
 Y al conjunto de expresiones:
 
@@ -469,7 +469,7 @@ En la extensión anterior $let\ x : Nat = \underline{2}\ in\ M$
   \item En este sentido, $x$ es \xit{inmutable}: no existe una operación de asignación.
 \end{itemize}
 
-En programación imperativa pasa todo lo contrario: Todas las variables son mutables.
+En programación imperativa pasa todo lo contrario: todas las variables son mutables.
 Entonces, vamos a extender Cálculo Lambda Tipado con variables mutables (y lo llamamos $\lambda^{bnru}$, pero la $r$ es de referencias).
 
 Las operaciones básicas que vamos a manejar son:
@@ -481,17 +481,17 @@ Las operaciones básicas que vamos a manejar son:
 
 Estas 3 operaciones son \xbf{comandos}: expresiones que no interesan por su valor, sino por su \xbf{efecto}. Entonces, decimos que se evalúan para causar un efecto, y lo expresamos con un nuevo valor $unit$.
 
-En este momento nos estamos alejando de lo que serían un lenguaje funcional puro, en el que las expresiones son puras en el sentido de carecer de efectos.
+En este momento nos estamos alejando de lo que sería un lenguaje funcional puro, en el que las expresiones son puras en el sentido de carecer de efectos.
 
-Los tipos de $\lambda^{bnu}$ son:
+Los tipos de $\lambda^{bnru}$ son:
 
-\[\sigma :: Bool \vert Nat \vert \sigma\to\rho \vert Unit \vert Ref \sigma \]
+\[\sigma ::= Bool \vert Nat \vert \sigma\to\rho \vert Unit \vert Ref\ \sigma \]
 
 Las expresiones nos quedan:
 
 \[M ::= x \vert \abs{x}{\sigma}{M} \vert \app{M}{N} \vert unit \vert ref\ M \vert !M \vert M := N \vert l \]
 
-Notar que $Unit$ es un tipo unitario: el único valor posible de una expresión de ese tipo es $unit$. Cumple un rol similar a $void$ en C o Java. Por otro lado, $Ref \sigma$ es el tipo de las referencias a valores de tipo $\sigma$.
+Notar que $Unit$ es un tipo unitario: el único valor posible de una expresión de ese tipo es $unit$. Cumple un rol similar a $void$ en C o Java. Por otro lado, $Ref \sigma$ es el tipo de las referencias a valores de tipo $\sigma$, y l son las direcciones, que representan a las referencias.
 
 En primer lugar, podemos introducir una forma de evaluar varias expresiones en \xbf{secuencia}:
 
@@ -499,9 +499,9 @@ En primer lugar, podemos introducir una forma de evaluar varias expresiones en \
 
 Entonces, la evaluación de $M_1; M_2$ consiste en primero evaluar $M_1$  y luego $M_2$. Este comportamiento funciona debido a las reglas de evaluación definidas previamente para $\lambda^{bn}$.
 
-El conjunto de valores son:
+El conjunto de valores ahora incluye también a las direcciones:
 
-\[V ::= true \vert false \vert 0 \vert n \vert unit \vert \abs{x}{\sigma}{M} \vert l \]
+\[V ::= true \vert false \vert 0 \vert \underline{n} \vert unit \vert \abs{x}{\sigma}{M} \vert l \]
 
 Y las reglas de tipado:
 

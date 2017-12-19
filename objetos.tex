@@ -141,7 +141,7 @@ El tipo responde a la especificación de un objeto, mientras que la clase a su i
 
 \subsection{Subtipado}
 
-Introducimos ahora la noción de \xbf{Juicio de subtitpado} $\subt{\sigma}{\tau}$, que se entiende como ``En todo contexto donde se espera una expresión de tipo $\tau$, puede utilizarse una de tipo $\sigma$ en su lugar sin que ello genere un error''. Ejemplo, si \xtt{D} es subclase de \xtt{C}, se espera que \subt{DType}{CType}.
+Introducimos ahora la noción de \xbf{Juicio de subtipado} $\subt{\sigma}{\tau}$, que se entiende como ``En todo contexto donde se espera una expresión de tipo $\tau$, puede utilizarse una de tipo $\sigma$ en su lugar sin que ello genere un error''. Ejemplo, si \xtt{D} es subclase de \xtt{C}, se espera que \subt{DType}{CType}.
 
 Ahora bien, si $\Gamma \rhd M : \sigma$ y \subt{\sigma}{\tau}, siguiendo el principio de subtipado, podemos armar una nueva regla de tipado llamada \xbf{Subsumption}:
 
