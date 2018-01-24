@@ -27,7 +27,7 @@
     Y pueden estar bien o mal formadas, dependiendo de las reglas sintácticas y de las reglas de asignación de tipos.
   \item \xbf{Funciones:} son valores especiales que representan ``transformaciones de datos''. Nótese que al ser valores, pueden ser argumento de otras funciones, resultado, almacenarse en estructuras de datos, ser estructuras de datos, etc. Llamamos funciones de \xbf{alto orden} a las funciones que trabajan con funciones.
   \item \xbf{Transparencia referencial:} el valor de una expresión depende sólo de los elementos que la constituyen. Esto implica, por ejemplo, que los detalles de ejecución no influencian el comportamiento del programa. Además, existe la posibilidad de demostrar propiedades usando las propiedades de las subexpresiones y métodos de deducción lógica.
-  \item \xbf{Ecuaciones orientadas:} tienen la forma $e_1 = e_2$, donde $e_1$ y $e_2$ expresan el mismo valor. Decimos que están orientadas porque se puede utilizar $e_2$ para reemplazar una aparición de $e_1$ en alguna expresión (pero no al revés).
+  \item \xbf{Ecuaciones orientadas:} tienen la forma $e_1 = e_2$, donde $e_1$ y $e_2$ expresan el mismo valor. Decimos que están orientadas porque se puede utiliza $e_2$ para reemplazar una aparición de $e_1$ en alguna expresión (pero no al revés).
   \item \xbf{Programa funcional:} es un conjunto de ecuaciones que definen una o más funciones. Para usarlo, resolvemos la reducción de la aplicación de una función a sus datos (reducción de una expresión).
 \end{itemize}
 
@@ -73,13 +73,13 @@ Es decir, toda expresión debería tener un tipo para ser válida.
 
 \subsubsection{Tipo abstracto (TAD)}
 
-\subsubsection{Pattern matching} es un mecanismo para acceder a los parámetros con los que fue construido un Tipo Algebraico. \xbf{Pattern} es una expresión utilizando constructores y variables sin repetir. \xbf{Matching} es la operación que dice si una expresión es de la forma de un patrón.
+\subsubsection{Pattern matching} Es un mecanismo para acceder a los parámetros con los que fue construido un Tipo Algebraico. \xbf{Pattern} es una expresión utilizando constructores y variables sin repetir. \xbf{Matching} es la operación que dice si una expresión es de la forma de un patrón.
 
-\subsubsection{Tipos algebraicos recursivos} representan conjuntos inductivos, al menos un constructor de tener al menos un parámetro de tipo si mismo.
+\subsubsection{Tipos algebraicos recursivos} Representan conjuntos inductivos. Al menos un constructor debe tener al menos un parámetro de tipo sí mismo.
 
 \subsection{Currificación}
 
-Establece una correspondencia entre cada función de múltiples parámetros y una de alto orden que retorna una función intermedia que completa el trabajo. Es decir, por cada \xtt{f'} definida como:
+Establece una correspondencia entre cada función de múltiples parámetros, y una de alto orden que retorna una función intermedia que completa el trabajo. Es decir, por cada \xtt{f'} definida como:
 \begin{lstlisting}[language=Haskell]
 f' :: (a,b) -> c
 f' (x,y) = e
@@ -240,15 +240,15 @@ FV(\app{M}{N}) &\eqdef FV(M) \cup FV(N) \\
 FV(\abs{x}{\sigma}{M}) &\eqdef FV(M)\ \backslash\ \{x\} \\
 \end{align*}
 
-Luego, el proceso de sustitución $M\{x \from N\}$ consiste en sustituir todas las ocurrencias \xit{libres} de $x$ en el término $M$ por el término $N$. Esto se utilizar para darle semántica a la aplicación de funciones.
+Luego, el proceso de sustitución $M\{x \from N\}$ consiste en sustituir todas las ocurrencias \xit{libres} de $x$ en el término $M$ por el término $N$. Esto se utiliza para darle semántica a la aplicación de funciones.
 
-Cuando realizamos este proceso, asumimos que la variable ligada se renombró de tal manera que no ocurre libre en $N$. Por ejemplo:
+Cuando realizamos este proceso, asumimos que la variable ligada se renombró de tal manera que no ocurre libre en $N$. Por ejemplo,
 
-\[ \sust{\abs{z}{\sigma}{x}}{x\from Z} = \abs{z}{\sigma}{z}\]
+\[ \sust{\abs{z}{\sigma}{x}}{x\from z} = \abs{z}{\sigma}{z}\]
 
-Está mal, ya que convertimos la función constante \abs{z}{\sigma}{x} en la función identidad. Entonces, deberíamos haber utilizado:
+está mal, ya que convertimos la función constante \abs{z}{\sigma}{x} en la función identidad. Entonces, deberíamos haber utilizado:
 
-\[ \sust{\abs{w}{\sigma}{x}}{x\from Z} = \abs{w}{\sigma}{z}\]
+\[ \sust{\abs{w}{\sigma}{x}}{x\from z} = \abs{w}{\sigma}{z}\]
 
 Una vez que entendemos esto, podemos definir el concepto de $\alpha-equivalencia$. Decimos que dos términos $M$ y $N$ son $\alpha-equivalentes$ si difieren solamente en el nombre de sus variables ligadas. Ejemplo: $\abs{z}{Bool}{z} =_{\alpha} \abs{y}{Bool}{y}$, pero $\abs{x}{Bool}{y} \neq_{\alpha} \abs{x}{Bool}{z}$.
 
@@ -277,7 +277,7 @@ En resumen:
 
 Ahora presentamos algunas nociones.
 
-Un \xit{contexto de tipado} $\Gamma$ es un conjunto de pares $\{x_1:\sigma_1,\dots,x_n:\sigma_n\}$ donde cada $x_i$ es distinto. Los $x_i$ representan las variables y los $\sigma_i$ sus tipo asignado.
+Un \xit{contexto de tipado} $\Gamma$ es un conjunto de pares $\{x_1:\sigma_1,\dots,x_n:\sigma_n\}$ donde cada $x_i$ es distinto. Los $x_i$ representan las variables y los $\sigma_i$ sus tipo asignados.
 
 Un \xit{juicio de tipado} es una expresión de la forma $\Gamma \rhd M : \sigma$ que significa que el término $M$ tiene tipo $\sigma$ asumiendo el contexto de tipado $\Gamma$. Estos juicios se generan utilizando \xit{axiomas y reglas de tipado}. Ejemplo de axioma:
 
@@ -302,7 +302,7 @@ Entonces, $M$ es \xit{tipable}  si $\Gamma \rhd M : \sigma$ puede derivarse usan
 
 Habiendo definido la sintaxis de $\lambda^b$, nos interesa formular cómo se evalúan o ejecutan los términos. Esto se puede hacer de varias formas: operacional, denotacional y axiomática. Nosotros vamos a usar \xit{operacional}.
 
-La semántica operacional consiste en interpretar a los \xit{términos como estados} de una máquina abstracta y definir una \xit{función de transición} que indica, dado un estado, cual es el estado siguiente. De esta forma, el \xit{significado} de un término $M$ es el estado final que alcanza la máquina empezando desde $M$. Hay principalmente dos formas de definir la función de transición:
+La semántica operacional consiste en interpretar a los \xit{términos como estados} de una máquina abstracta y definir una \xit{función de transición} que indica, dado un estado, cuál es el estado siguiente. De esta forma, el \xit{significado} de un término $M$ es el estado final que alcanza la máquina empezando desde $M$. Hay principalmente dos formas de definir la función de transición:
 
 \begin{itemize}
   \item \xbf{Small-step}: la función de transición describe un paso de computación.
@@ -350,7 +350,7 @@ El \xbf{Juicio de evaluación en muchos pasos} $\toto$ es la clausura reflexiva,
 
 La versión más usada en la materia del Lambda Cálculo es $\lambda^{bn}$: que tiene $Bool$, $Nat$ y funciones, pero existen varias extensiones que aportan nuevas herramientas.
 
-Cuando definimos una extensión del Cálculo $\lambda$ tenemos que re-definir (o indicar que es lo que se agrega):
+Cuando definimos una extensión del Cálculo $\lambda$ tenemos que re-definir (o indicar qué es lo que se agrega):
 \begin{itemize}
   \item Expresiones válidas
   \item Tipos
@@ -411,11 +411,11 @@ Llamada $\lambda^{\dots r}$. Permite utilizar descriptores de campos de la pinta
 
 Agregamos al conjunto de tipos:
 
-\[\sigma :: \dots \vert \{I_i : \sigma_i^{\ i \in 1..n}\}\]
+\[\sigma ::= \dots \vert \{I_i : \sigma_i^{\ i \in 1..n}\}\]
 
 Y al conjunto de expresiones:
 
-\[M :: \dots \vert \{I_i = M_i^{\ i \in 1..n}\} \vert M.I\]
+\[M ::= \dots \vert \{I_i = M_i^{\ i \in 1..n}\} \vert M.I\]
 
 Informalmente:
 \begin{itemize}
@@ -445,7 +445,7 @@ Y las reglas de semántica operacional son:
 
 Esta extensión nos ayuda a mejorar la legibilidad. Agregamos a las expresiones:
 
-\[M :: \dots \vert let\ x : \sigma = M\ in\ N\]
+\[M ::= \dots \vert let\ x : \sigma = M\ in\ N\]
 
 Informalmente, $let\ x : \sigma = M\ in\ N$ evalúa $M$ a un valor $V$, liga la variable $x$ a $V$ y evalúa $N$.
 Esta extensión no agrega tipos nuevos.
@@ -469,7 +469,7 @@ En la extensión anterior $let\ x : Nat = \underline{2}\ in\ M$
   \item En este sentido, $x$ es \xit{inmutable}: no existe una operación de asignación.
 \end{itemize}
 
-En programación imperativa pasa todo lo contrario: Todas las variables son mutables.
+En programación imperativa pasa todo lo contrario: todas las variables son mutables.
 Entonces, vamos a extender Cálculo Lambda Tipado con variables mutables (y lo llamamos $\lambda^{bnru}$, pero la $r$ es de referencias).
 
 Las operaciones básicas que vamos a manejar son:
@@ -481,17 +481,17 @@ Las operaciones básicas que vamos a manejar son:
 
 Estas 3 operaciones son \xbf{comandos}: expresiones que no interesan por su valor, sino por su \xbf{efecto}. Entonces, decimos que se evalúan para causar un efecto, y lo expresamos con un nuevo valor $unit$.
 
-En este momento nos estamos alejando de lo que serían un lenguaje funcional puro, en el que las expresiones son puras en el sentido de carecer de efectos.
+En este momento nos estamos alejando de lo que sería un lenguaje funcional puro, en el que las expresiones son puras en el sentido de carecer de efectos.
 
-Los tipos de $\lambda^{bnu}$ son:
+Los tipos de $\lambda^{bnru}$ son:
 
-\[\sigma :: Bool \vert Nat \vert \sigma\to\rho \vert Unit \vert Ref \sigma \]
+\[\sigma ::= Bool \vert Nat \vert \sigma\to\rho \vert Unit \vert Ref\ \sigma \]
 
 Las expresiones nos quedan:
 
-\[M :: x \vert \abs{x}{\sigma}{M} \vert \app{M}{N} \vert unit \vert ref\ M \vert !M \vert M := N \vert l \]
+\[M ::= x \vert \abs{x}{\sigma}{M} \vert \app{M}{N} \vert unit \vert ref\ M \vert !M \vert M := N \vert l \]
 
-Notar que $Unit$ es un tipo unitario: el único valor posible de una expresión de ese tipo es $unit$. Cumple un rol similar a $void$ en C o Java. Por otro lado, $Ref \sigma$ es el tipo de las referencias a valores de tipo $\sigma$.
+Notar que $Unit$ es un tipo unitario: el único valor posible de una expresión de ese tipo es $unit$. Cumple un rol similar a $void$ en C o Java. Por otro lado, $Ref \sigma$ es el tipo de las referencias a valores de tipo $\sigma$, y l son las direcciones, que representan a las referencias.
 
 En primer lugar, podemos introducir una forma de evaluar varias expresiones en \xbf{secuencia}:
 
@@ -499,9 +499,9 @@ En primer lugar, podemos introducir una forma de evaluar varias expresiones en \
 
 Entonces, la evaluación de $M_1; M_2$ consiste en primero evaluar $M_1$  y luego $M_2$. Este comportamiento funciona debido a las reglas de evaluación definidas previamente para $\lambda^{bn}$.
 
-El conjunto de valores son:
+El conjunto de valores ahora incluye también a las direcciones:
 
-\[V ::= true \vert false \vert 0 \vert n \vert unit \vert \abs{x}{\sigma}{M} \vert l \]
+\[V ::= true \vert false \vert 0 \vert \underline{n} \vert unit \vert \abs{x}{\sigma}{M} \vert l \]
 
 Y las reglas de tipado:
 
@@ -551,7 +551,7 @@ Notar que hasta ahora las reglas no modifican el store.
 
 Habíamos visto antes que \xit{Corrección = Preservación + Progreso}. Sin embargo, al introducir el sistema de tipos para las direcciones ($\Sigma$) rompimos ambos conceptos.
 
-Esto se puede ver teniendo en cuenta que $\GStipa{M}{\sigma}$ y $M \vert \mu \to M' \vert \mu'$ implica $\GStipa{M'}{\sigma}$. Pero si suponemos, por ejemplo, que: $M = !l, \Gamma = \emptyset, \Sigma(l) = Nat, \mu(l) = true$, entonces $\GStipa{M}{Nat}$ y $M \vert \mu \to true \vert \mu$, pero $\GStipa{true}{Nat}$ no vale.
+Esto se puede ver teniendo en cuenta que $\GStipa{M}{\sigma}$ y $M \vert \mu \to M' \vert \mu'$ implican $\GStipa{M'}{\sigma}$. Pero si suponemos, por ejemplo, que: $M = !l, \Gamma = \emptyset, \Sigma(l) = Nat, \mu(l) = true$, entonces $\GStipa{M}{Nat}$ y $M \vert \mu \to true \vert \mu$, pero $\GStipa{true}{Nat}$ no vale.
 
 Para la \xit{preservación}, precisamos una noción de compatibilidad entre el store y el contexto de tipado para store. Entonces, debemos tipar los stores. Con este objetivo introducimos un nuevo juicio de tipado: $\Gamma|\Sigma \rhd \mu$, y se define del siguiente modo: $\Gamma|\Sigma \rhd \mu$ sii
 \begin{enumerate}
@@ -575,11 +575,11 @@ Para el \xit{progreso}. Si $M$ es cerrado y bien tipado (i.e. $\emptyset|\Sigma 
 
 \paragraph{Recursión}
 
-Una ecuación recursiva es aquella que tiene la pinta $f = \dots f \dots f \dots$ (se usa a si misma en la definición). Esta extensión permite construir funciones recursivas.
+Una ecuación recursiva es aquella que tiene la pinta $f = \dots f \dots f \dots$ (se usa a sí misma en la definición). Esta extensión permite construir funciones recursivas.
 
 Agregamos a las expresiones:
 
-\[M :: \dots \vert fix\ M\]
+\[M ::= \dots \vert fix\ M\]
 
 No se precisan nuevos tipos, pero sí una regla de tipado:
 
@@ -658,11 +658,11 @@ Entonces, queremos definir una función \w{\cdot} que dado un término $U$ sin a
 
 La idea de nuestro algoritmo de inferencia va a ser analizar un término (sin anotaciones de tipo) a partir de sus subtérminos. El problema es que, una vez obtenida la información inferida de los subtérminos, debemos:
 \begin{itemize}
-  \item \xbf{Consistencia:} determinas si la información de cada subtérmino es consistente.
+  \item \xbf{Consistencia:} determinar si la información de cada subtérmino es consistente.
   \item \xbf{Síntesis:} sintetizar la información del término original a partir de la información de los subtérminos. Esto involucra \xit{compatibilizar} o \xit{unificar} la información de tipos cuando dos subtérminos tienen una misma variable.
 \end{itemize}
 
-El proceso de determinar si existe un sustitución $S$ tal que dos expresiones de tipos $\sigma$, $\tau$ son unificables (i.e. $S\sigma = S\tau$) se llama \xbf{unificación}.
+El proceso de determinar si existe una sustitución $S$ tal que dos expresiones de tipos $\sigma$, $\tau$ son unificables (i.e. $S\sigma = S\tau$) se llama \xbf{unificación}.
 
 \paragraph{Algunas propiedades de sustituciones}
 
@@ -694,7 +694,7 @@ El algoritmo de Martelli-Montanari es un algoritmo de unificación no-determiní
 
 \[G_0 \unito G_1 \unito_{S_1} \unito G_2 \unito \dots \unito_{S_k} G_n\]
 
-Las secuencias que terminan en el goal vació son exitosas. Si la secuencia es exitosa el MGU es $S_k \circ \dots \circ S_1$.
+Las secuencias que terminan en el goal vacío son exitosas. Si la secuencia es exitosa el MGU es $S_k \circ \dots \circ S_1$.
 
 Las reglas de este algoritmo son:
 
@@ -703,7 +703,7 @@ Las reglas de este algoritmo son:
   \item \xbf{Eliminación de par trivial:} $\{s \uni s\} \cup G \unito G$
   \item \xbf{Swap:} si $\sigma$ no es una variable, $\{\sigma \uni s\} \cup G \unito \{s \uni \sigma\} \cup G$
   \item \xbf{Eliminación de variable:} $\{s \uni \sigma\} \cup G \unito_{\sigma/s} G[\sigma/s]$
-  \item \xbf{Falla:} $\{\sigma \uni \tau\} \cup G \unito \text{falla}$, con $(\sigma, \tau) \in T \cup T^{-1}$ y $T = \{(Boo, Nat), (Nat, \sigma_1 \to \sigma_2), (Bool, \sigma_1 \to \sigma_2)\}$,
+  \item \xbf{Falla:} $\{\sigma \uni \tau\} \cup G \unito \text{falla}$, con $(\sigma, \tau) \in T \cup T^{-1}$ y $T = \{(Bool, Nat),$ ${(Nat, \sigma_1 \to \sigma_2)}$, ${(Bool, \sigma_1 \to \sigma_2)}$$\}$,
   \item \xbf{Occur check:} si $s \neq \sigma$ y $s \in FV(\sigma)$, entonces $\{s \uni \sigma\} \cup G \unito \text{falla}$
 \end{enumerate}
 

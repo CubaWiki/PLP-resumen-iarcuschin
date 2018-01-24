@@ -118,7 +118,7 @@ donde cada $C_i$ es un conjunto de literales
 
 El método de \xbf{Resolución} fue introducido en 1965 y se basa en el principio de demostración por refutación: probar que $A$ es válido mostrando que $\lnot A$ es insatisfacible.
 
-Además, se basa en el hecho que el conjunto de el conjunto de cláusulas
+Además, se basa en el hecho que el conjunto del conjunto de cláusulas
 
 \[\{C_1, \dots, C_m, \{A,P\}, \{B, \lnot P\}\}\]
 
@@ -325,7 +325,7 @@ La forma normal de Skolem de $A$ (escrito como $SK(A)$) se puede definir recursi
   \item Si $A'$ es de la forma $\forall x.B$, entonces $SK(A') = \forall x.SK(B)$.
   \item Si $A'$ es de la forma $\exists x.B$ y $\{x, y_1, \dots, y_m\}$ son las variables libres de B (que se ligan en $A$, dado que $A$ es sentencia), entonces
     \begin{itemize}
-      \item Si $m > 0$, crear un nuevo símbolo de función de Skolem, $f_x$ de aridad $m$ y definir $SK(A') = SK(B\{x \from f_x(y_1, \dots, Y_m)\})$
+      \item Si $m > 0$, crear un nuevo símbolo de función de Skolem, $f_x$ de aridad $m$ y definir $SK(A') = SK(B\{x \from f_x(y_1, \dots, y_m)\})$
       \item Si $m = 0$, crear una nueva constante de Skolem $c_x$ y definir $SK(A') = SK(B\{x \from c_x\})$
     \end{itemize}
     Notar que dado que $A$ está rectificada, cada $f_x$ y $c_x$ es única.
@@ -345,7 +345,7 @@ Este paso es idéntico a como hacíamos cuando estábamos trabajando con fórmul
 
 Consiste en distribuir los cuantificadores sobre cada conjunción usando la fórmula válida $\forall x.(A\land B) \iff \forall x. A \land \forall x. B$ arrojando una conjunción de cláusulas
 
-\[\forall x_1,\dots,x_n C_1 \land \dots \land \forall y_1,\dots,y_m C_r\]
+\[\forall x_1,\dots,x_n C_1 \land \dots \land \forall x_1,\dots,x_m C_r\]
 
  donde cada $C_i$ es una disyunción de literales.
 
@@ -353,9 +353,9 @@ Por último, lo simplificamos escribiendo $\{C_1, \dots, C_r\}$
 
 \paragraph{Regla de resolución para lógica de primer orden}
 
-Ahora que tenemos nuestra fórmula en correctamente Forma Clausal veamos como hacemos para aplicar resolución.
+Ahora que tenemos nuestra fórmula correctamente en Forma Clausal veamos cómo hacemos para aplicar resolución.
 
-Cómo motivación, consideremos la fórmula $(\forall x. P(x)) \land \lnot P(a)$, que claramente es insatisfacible. Sin embargo, no podemos aplicar la regla de resolución estandar, ya que $P(x)$ y $P(a)$ no son idénticos\dots\ pero si son unificables.
+Como motivación, consideremos la fórmula $(\forall x. P(x)) \land \lnot P(a)$, que claramente es insatisfacible. Sin embargo, no podemos aplicar la regla de resolución estandar, ya que $P(x)$ y $P(a)$ no son idénticos\dots\ pero sí son unificables.
 
 Definimos una nueva regla de resolución, como
 
@@ -384,7 +384,7 @@ donde $\sigma$ es el MGU de $\{B_1,\dots,B_k\}$.
 
 \subsection{Resolución lineal}
 
-Si bien el método de resolución general es completo, hallar refutaciones es un proceso muy caro en el caso general ya que el espacio de búsqueda producido puede ser enorme. Además, hay un alto grado de no-determinismo
+Si bien el método de resolución general es completo, hallar refutaciones es un proceso muy caro en el caso general ya que el espacio de búsqueda producido puede ser enorme. Además, hay un alto grado de no-determinismo.
 \begin{itemize}
   \item ¿Qué cláusulas elegimos? Hace falta una Regla de búsqueda.
   \item ¿Qué literales eliminamos? Hace falta una Regla de selección.
@@ -431,7 +431,7 @@ Observaciones de la resolución lineal:
 
 Es un tipo de subclase de fórmulas para las cuales existen procesos eficientes para producir refutaciones sin perder completitud.
 
-Una cláusula de Horn es una disyunción de literales que tiene \xit{a lo sumo} un literal positivo. Para conjuntos de cláusulas de Horn puede la resolución SLD, que tiene buenas propiedades.
+Una cláusula de Horn es una disyunción de literales que tiene \xit{a lo sumo} un literal positivo. Para conjuntos de cláusulas de Horn se puede usar la resolución SLD, que tiene buenas propiedades.
 
 Dividimos estas cláusulas en 3 grupos:
 \begin{itemize}
@@ -443,7 +443,7 @@ Dividimos estas cláusulas en 3 grupos:
     \end{itemize}
 \end{itemize}
 
-Tener en cuenta que no todas las fórmulas de primer orden pueden expresarse como una cláusula de Horn.
+Tener en cuenta que no todas las fórmulas de primer orden pueden expresarse como una cláusula de Horn, aunque es lo suficientemente expresivo para representar programas
 
 \subsection{Resolución SLD}
 
@@ -452,7 +452,7 @@ Es una variante de la resolución lineal.
 Sea $S = P \cup \{G\}$ un conjunto de cláusulas de Horn (con nombres de variables disjuntos) tal que
 \begin{itemize}
   \item $P$ es un conjunto de cláusulas de definición y
-  \item $G$ es una cláusulas \xit{goal} o negativa.
+  \item $G$ es una cláusula \xit{goal} o negativa.
 \end{itemize}
 
 Decimos que $S$ son las cláusulas de entrada. $P$ se conoce como el programa o base de conocimientos y $G$ es el objetivo o meta.
@@ -515,9 +515,9 @@ En particular, utilizar resolución SLD con las siguientes restricciones:
 
 Estas dos reglas se definen como la \xit{estrategia}. Cada estrategia determina un árbol de búsqueda o árbol SLD.
 
-Dado que $(A_1 \land \dots \land A_n) \supset B \iff \lnot (A_1 \land \dots \land A_n) \supset B \iff \lnot A_1 \lor \dots \lor \lnot A_n \lor B$, tenemos que las cláusulas $P$ en Prolog se escriben
+Dado que $(A_1 \land \dots \land A_n) \supset B \iff \lnot (A_1 \land \dots \land A_n) \lor B \iff \lnot A_1 \lor \dots \lor \lnot A_n \lor B$, tenemos que las cláusulas $P$ en Prolog se escriben
 \begin{itemize}
-  \item \xtt{B :- A\_1, \dots, A\_n.} para $\{B, A_1, \dots, \lnot A_n\}$ (reglas)
+  \item \xtt{B :- A\_1, \dots, A\_n.} para $\{B, \lnot A_1, \dots, \lnot A_n\}$ (reglas)
   \item \xtt{B.} para $\{B\}$ (hechos)
 \end{itemize}
 
@@ -526,8 +526,8 @@ Dado que $(A_1 \land \dots \land A_n) \supset B \iff \lnot (A_1 \land \dots \lan
   \item Recorre el árbol SLD en profundidad (\xbf{DFS}), lo cual permite implementarlo de manera muy \xit{eficiente}:
   \begin{itemize}
     \item Se usa una pila para representar los átomos del goal.
-    \item Se hace un push del resolverte del átomo del tpo de la pila con la cláusula de definición.
-    \item Se hace un pop cuando el átomo del top de la pila no unifica con ninguna cláusula de definición más (luego, el átomo que queda en el tope se unifica con la siguiente cláusula de definición).
+    \item Se hace un push del resolvente del átomo del tope de la pila con la cláusula de definición.
+    \item Se hace un pop cuando el átomo del tope de la pila no unifica con ninguna cláusula de definición más (luego, el átomo que queda en el tope se unifica con la siguiente cláusula de definición).
   \end{itemize}
   \item \xbf{Desventaja:} puede no llegar a encontrar una refutación SLD aún si existe.
 \end{itemize}
@@ -562,9 +562,9 @@ not(G) :- call(G), !, fail.
 not(G).
 \end{lstlisting}
 
-La clave está en combinar el operador \xtt{!} y \xtt{fail}. Una vez que el \xtt{Goal} tiene éxito, el cut nos prohíbe de volver atrás en el árbol SLD, y el \xtt{fail} hace que la solución actual falle. Como no hay más ramas que explorar, toda la consulta falla.
+La clave está en combinar el operador \xtt{!} y \xtt{fail}. Una vez que el \xtt{Goal} tiene éxito, el cut nos prohíbe volver atrás en el árbol SLD, y el \xtt{fail} hace que la solución actual falle. Como no hay más ramas que explorar, toda la consulta falla.
 
-Notar que es distinto a la negación lógica. Si la cláusulas no es cerrada, \xtt{not(G)} tiene éxito si no existe \xit{ninguna} valuación tal que \xtt{G} se satisface.
+Notar que es distinto a la negación lógica. Si la cláusula no es cerrada, \xtt{not(G)} tiene éxito si no existe \xit{ninguna} valuación tal que \xtt{G} se satisface.
 
 Además, observar que el \xtt{not(G)} nunca instancia variables de \xtt{G}:
 \begin{itemize}

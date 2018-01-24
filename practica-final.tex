@@ -56,7 +56,7 @@ esSubarbol uno = recAT True (\otro recuIzq recuCent recuDer->uno == otro || recu
 funcionizar::Eq a => [a]->[b]->a->Maybe b
 funcionizar _ [] _ = Nothing
 funcionizar [] _ _ = Nothing
-funcionizar (x:xs) (y:ys) p | p == x = y
+funcionizar (x:xs) (y:ys) p | (p == x) = Just y
                             | otherwise = funcionizar xs ys p
 \end{lstlisting}
 
@@ -70,8 +70,8 @@ inversaAcotada f dom = funcionizar (map f dom) dom
 \paragraph{1.} Igual que en el Ejercicio 1, identificamos los constructores:
 \begin{itemize}
   \item \xtt{Cte Float}: toma 1 parámetro.
-  \item \xtt{Suma expr expr}: toma 2 parámetro.
-  \item \xtt{Div expr expr}: toma 2 parámetro.
+  \item \xtt{Suma expr expr}: toma 2 parámetros.
+  \item \xtt{Div expr expr}: toma 2 parámetros.
 \end{itemize}
 
 Si asumimos que nuestro tipo de salida es \xtt{b}, el esquema \xtt{foldExpr} va a recibir 4 parámetros:
